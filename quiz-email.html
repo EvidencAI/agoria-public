@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz — AgorIA</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bleu-nuit: #1a1a2e;
+    --bleu-nuit-clair: #16213e;
+    --corail: #E07A5F;
+    --corail-hover: #c96a52;
+    --surface: #ffffff;
+    --texte-clair: #f8fafc;
+    --texte-secondaire: #94a3b8;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bleu-nuit); color:var(--texte-clair); min-height:100vh; }
+  header { background:var(--bleu-nuit); padding:20px 32px; display:flex; align-items:center; justify-content:center; gap:40px; border-bottom:1px solid rgba(255,255,255,0.08); }
+  .header-left { display:flex; flex-direction:column; align-items:flex-start; }
+  .brand-agoria { font-family:'Playfair Display',Georgia,serif; font-size:2rem; font-weight:700; color:#fff; line-height:1.1; }
+  .brand-agoria .ia { color:var(--corail); }
+  .brand-by { font-family:'DM Sans',sans-serif; font-size:0.85rem; color:var(--texte-secondaire); margin-top:3px; }
+  .brand-by a { color:var(--corail); text-decoration:none; font-weight:500; }
+  .header-sep { width:1px; height:48px; background:rgba(255,255,255,0.12); }
+  .header-right img { height:52px; width:auto; opacity:0.9; }
+  .container { max-width:780px; margin:0 auto; padding:24px 24px 40px; }
+  .welcome { text-align:center; margin-bottom:20px; }
+  .welcome h1 { font-family:'Playfair Display',Georgia,serif; font-size:1.8rem; font-weight:700; margin-bottom:8px; }
+  .welcome .sub { color:var(--texte-secondaire); font-size:1rem; line-height:1.5; max-width:560px; margin:0 auto; }
+  .progress-bar { display:flex; gap:6px; justify-content:center; margin-top:14px; }
+  .progress-dot { width:36px; height:5px; border-radius:3px; background:rgba(255,255,255,0.1); transition:background 0.3s; }
+  .progress-dot.active { background:var(--corail); }
+
+  .step { background:var(--surface); border-radius:20px; padding:28px 32px; margin-bottom:20px; box-shadow:0 4px 24px rgba(0,0,0,0.3); color:#2d2d2d; }
+  .step-label { font-size:0.8rem; text-transform:uppercase; letter-spacing:1.5px; color:var(--corail); font-weight:600; margin-bottom:10px; }
+  .step h2 { font-family:'Playfair Display',Georgia,serif; font-size:1.3rem; font-weight:700; margin-bottom:16px; color:var(--bleu-nuit); }
+
+  .question-block { margin-bottom:28px; }
+  .question-block:last-child { margin-bottom:0; }
+  .q-number { display:inline-block; background:var(--corail); color:#fff; font-weight:700; font-size:0.85rem; width:28px; height:28px; line-height:28px; text-align:center; border-radius:50%; margin-right:10px; }
+  .q-text { font-size:1.05rem; font-weight:600; color:var(--bleu-nuit); display:inline; line-height:1.5; }
+  .q-options { margin-top:12px; display:flex; flex-direction:column; gap:8px; }
+  .q-option { padding:12px 16px; border:2px solid #e2e8f0; border-radius:12px; cursor:pointer; font-size:0.95rem; transition:all 0.2s; background:#fff; user-select:none; display:flex; align-items:center; gap:12px; }
+  .q-option:hover { border-color:var(--corail); background:#fef6f4; }
+  .q-option.selected { border-color:var(--corail); background:var(--corail); color:#fff; }
+  .q-option .letter { font-weight:700; font-size:0.9rem; width:26px; height:26px; line-height:26px; text-align:center; border-radius:50%; background:rgba(0,0,0,0.06); flex-shrink:0; }
+  .q-option.selected .letter { background:rgba(255,255,255,0.25); }
+
+  .btn-row { display:flex; gap:12px; margin-top:24px; justify-content:flex-end; }
+  .btn { padding:12px 32px; border-radius:12px; font-size:1rem; font-weight:600; cursor:pointer; border:none; transition:all 0.2s; }
+  .btn-primary { background:var(--corail); color:#fff; }
+  .btn-primary:hover { background:var(--corail-hover); transform:translateY(-1px); }
+  .btn-primary:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+  .btn-secondary { background:transparent; color:var(--corail); border:2px solid var(--corail); }
+  .btn-secondary:hover { background:rgba(224,122,95,0.08); }
+
+  .success-screen { text-align:center; padding:48px 24px; }
+  .success-screen .checkmark { width:80px; height:80px; margin:0 auto 24px; background:var(--corail); border-radius:50%; display:flex; align-items:center; justify-content:center; }
+  .success-screen .checkmark svg { width:40px; height:40px; stroke:#fff; stroke-width:3; fill:none; }
+  .success-screen h1 { font-family:'Playfair Display',Georgia,serif; font-size:1.6rem; margin-bottom:12px; }
+  .success-screen p { color:var(--texte-secondaire); font-size:1rem; line-height:1.5; }
+  .score-display { font-size:3rem; font-weight:700; color:var(--corail); margin:20px 0; font-family:'Playfair Display',Georgia,serif; }
+
+  .loading { text-align:center; padding:80px 24px; }
+  .spinner { width:40px; height:40px; border:3px solid rgba(255,255,255,0.1); border-top-color:var(--corail); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 16px; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  @media(max-width:600px) {
+    header { padding:14px 16px; gap:16px; }
+    .brand-agoria { font-size:1.5rem; }
+    .header-right img { height:36px; }
+    .container { padding:16px 16px 32px; }
+    .step { padding:20px 18px; }
+  }
+</style>
+</head>
+<body>
+<div id="APP"></div>
+<script>
+const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.port === '5050';
+const SUPABASE_URL = 'https://nggsfmxlopjulnppsxna.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5nZ3NmbXhsb3BqdWxucHBzeG5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwMjQ3ODAsImV4cCI6MjA5MDYwMDc4MH0.wDyuGciPMGijOFo5WtyIyqsEDe2QUgwp8g0xJcsPyvI';
+const APP = document.getElementById('APP');
+const LETTERS = ['A','B','C','D'];
+let TOKEN = new URLSearchParams(window.location.search).get('token');
+let quizData = null;
+let prenom = '';
+let quizId = '';
+let answers = {};
+
+async function sbGet(path) {
+  const resp = await fetch(SUPABASE_URL + '/rest/v1/' + path, {
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Accept-Profile': 'formation_data' }
+  });
+  return resp.json();
+}
+async function sbPatch(table, filters, data) {
+  const resp = await fetch(SUPABASE_URL + '/rest/v1/' + table + '?' + filters, {
+    method: 'PATCH',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Profile': 'formation_data', 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+    body: JSON.stringify(data)
+  });
+  return resp.json();
+}
+
+function headerHTML() {
+  const logoSrc = IS_LOCAL ? '/assets/alia-logo-blanc.png' : 'https://www.alia-formation.com/wp-content/uploads/2024/01/logo-alia-blanc.png';
+  return `<header>
+    <div class="header-left">
+      <div class="brand-agoria">Agor<span class="ia">IA</span></div>
+      <div class="brand-by">by <a href="https://evidencai.com">EvidencAI</a></div>
+    </div>
+    <div class="header-sep"></div>
+    <div class="header-right"><img src="${logoSrc}" alt="ALIA Formation"></div>
+  </header>`;
+}
+
+function showLoading() {
+  APP.innerHTML = headerHTML() + '<div class="container"><div class="loading"><div class="spinner"></div><p>Chargement du quiz...</p></div></div>';
+}
+
+function showError(msg) {
+  APP.innerHTML = headerHTML() + `<div class="container"><div class="step" style="text-align:center;padding:40px;"><h2 style="color:#e74c3c;margin-bottom:12px;">Oups</h2><p style="color:#64748b;">${msg}</p></div></div>`;
+}
+
+function showSuccess(score, total) {
+  const pct = Math.round(score / total * 100);
+  let msg = '';
+  if (pct === 100) msg = 'Parfait ! Vous maîtrisez les fondamentaux.';
+  else if (pct >= 80) msg = 'Excellent ! Quelques nuances à affiner.';
+  else if (pct >= 60) msg = 'Bien joué ! Des points à consolider.';
+  else msg = 'Pas de panique, on reprendra ces points ensemble.';
+
+  APP.innerHTML = headerHTML() + `<div class="container"><div class="success-screen">
+    <div class="checkmark"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+    <h1>Merci ${prenom} !</h1>
+    <div class="score-display">${score} / ${total}</div>
+    <p>${msg}</p>
+    <p style="margin-top:16px;color:var(--texte-secondaire);font-size:0.9rem;">Vos réponses ont été enregistrées. Stéphane et Az analyseront les résultats du groupe.</p>
+    <div style="margin-top:48px;border-top:1px solid rgba(255,255,255,0.08);padding-top:40px;text-align:center">
+      <a href="https://evidencai.com" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block;margin-bottom:18px;">
+        <span style="font-family:'Playfair Display',Georgia,serif;font-size:1.5rem;font-weight:700;color:#fff;">Evidenc<span style="color:var(--corail)">AI</span></span>
+      </a>
+      <p style="color:var(--texte-secondaire);font-size:0.92rem;line-height:1.5;max-width:420px;margin:0 auto 16px;">
+        Retrouvez toutes nos prestations
+      </p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:20px;">
+        <span style="padding:6px 14px;border-radius:20px;font-size:0.82rem;background:rgba(255,255,255,0.06);color:var(--texte-secondaire);">Ateliers</span>
+        <span style="padding:6px 14px;border-radius:20px;font-size:0.82rem;background:rgba(255,255,255,0.06);color:var(--texte-secondaire);">Formations</span>
+        <span style="padding:6px 14px;border-radius:20px;font-size:0.82rem;background:rgba(255,255,255,0.06);color:var(--texte-secondaire);">Solutions IA</span>
+        <span style="padding:6px 14px;border-radius:20px;font-size:0.82rem;background:rgba(255,255,255,0.06);color:var(--texte-secondaire);">Outils</span>
+      </div>
+      <a href="https://evidencai.com" target="_blank" rel="noopener" style="display:inline-block;padding:12px 28px;background:var(--corail);color:#fff;border-radius:10px;font-weight:600;font-size:0.95rem;text-decoration:none;">Visiter EvidencAI.com</a>
+    </div>
+  </div></div>`;
+}
+
+function renderQuiz() {
+  const questions = quizData.questions;
+  let qHTML = '';
+  questions.forEach((q, i) => {
+    let optHTML = '';
+    q.options.forEach((opt, j) => {
+      const sel = answers[q.id] === j ? ' selected' : '';
+      optHTML += `<div class="q-option${sel}" onclick="selectAnswer('${q.id}',${j},this)">
+        <span class="letter">${LETTERS[j]}</span>
+        <span>${opt}</span>
+      </div>`;
+    });
+    qHTML += `<div class="question-block">
+      <span class="q-number">${i+1}</span>
+      <span class="q-text">${q.question}</span>
+      <div class="q-options">${optHTML}</div>
+    </div>`;
+  });
+
+  const answered = Object.keys(answers).length;
+  const total = questions.length;
+  const allAnswered = answered === total;
+
+  let dotsHTML = '';
+  for (let i = 0; i < total; i++) {
+    dotsHTML += `<div class="progress-dot${i < answered ? ' active' : ''}"></div>`;
+  }
+
+  APP.innerHTML = headerHTML() + `<div class="container">
+    <div class="welcome">
+      <h1>${quizData.titre}</h1>
+      <div class="sub">${prenom}, répondez aux ${total} questions ci-dessous. Prenez votre temps.</div>
+      <div class="progress-bar">${dotsHTML}</div>
+    </div>
+    <div class="step">
+      <div class="step-label">Quiz ${quizData.id}</div>
+      <h2>${quizData.description}</h2>
+      ${qHTML}
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="submitQuiz()" ${allAnswered ? '' : 'disabled'}>
+          ${allAnswered ? 'Envoyer mes réponses' : `${answered} / ${total} réponses`}
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function selectAnswer(qId, optIndex, el) {
+  answers[qId] = optIndex;
+  renderQuiz();
+}
+
+async function submitQuiz() {
+  const questions = quizData.questions;
+  let score = 0;
+  const details = {};
+  questions.forEach(q => {
+    const chosen = answers[q.id];
+    const correct = chosen === q.reponse_correcte;
+    if (correct) score++;
+    details[q.id] = { chosen, correct, reponse_correcte: q.reponse_correcte };
+  });
+
+  const btn = document.querySelector('.btn-primary');
+  btn.textContent = 'Envoi...';
+  btn.disabled = true;
+
+  try {
+    if (IS_LOCAL) {
+      const resp = await fetch(`/api/quiz-email/${TOKEN}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ responses: details, score, total: questions.length })
+      });
+      const data = await resp.json();
+      if (data.ok) { showSuccess(score, questions.length); return; }
+    }
+    // Mode prod : direct Supabase PATCH
+    await sbPatch('quiz_email', `token=eq.${TOKEN}`, {
+      responses: details,
+      score: score,
+      total: questions.length,
+      completed_at: new Date().toISOString()
+    });
+    showSuccess(score, questions.length);
+  } catch(e) {
+    btn.textContent = 'Erreur, réessayez';
+    btn.disabled = false;
+    console.error(e);
+  }
+}
+
+async function init() {
+  showLoading();
+  if (!TOKEN) { showError('Lien invalide. Vérifiez le lien reçu par email.'); return; }
+  try {
+    if (IS_LOCAL) {
+      const resp = await fetch(`/api/quiz-email/${TOKEN}`);
+      const data = await resp.json();
+      if (data.error) { showError(data.error); return; }
+      if (data.completed) { showError('Vous avez déjà répondu à ce quiz. Merci !'); return; }
+      prenom = data.prenom;
+      quizId = data.quiz_id;
+      quizData = data.quiz;
+      renderQuiz();
+      return;
+    }
+    // Mode prod : direct Supabase
+    const records = await sbGet(`quiz_email?token=eq.${TOKEN}&limit=1`);
+    if (!records.length) { showError('Lien invalide ou expiré.'); return; }
+    const rec = records[0];
+    if (rec.completed_at) { showError('Vous avez déjà répondu à ce quiz. Merci !'); return; }
+    // Charger le participant
+    const parts = await sbGet(`participants?id=eq.${rec.participant_id}&limit=1`);
+    prenom = parts.length ? parts[0].prenom : '';
+    quizId = rec.quiz_id;
+    // Charger les questions depuis le JSON statique
+    const qResp = await fetch('/quizzes_email.json');
+    const allQuizzes = await qResp.json();
+    quizData = allQuizzes[quizId];
+    if (!quizData) { showError('Quiz introuvable.'); return; }
+    renderQuiz();
+  } catch(e) {
+    showError('Erreur de chargement. Réessayez.');
+    console.error(e);
+  }
+}
+
+init();
+</script>
+</body>
+</html>
