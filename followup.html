@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Évaluation à froid — AgorIA</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bleu-nuit: #1a1a2e;
+    --bleu-nuit-clair: #16213e;
+    --corail: #E07A5F;
+    --corail-hover: #c96a52;
+    --corail-light: #E8927A;
+    --surface: #ffffff;
+    --texte-clair: #f8fafc;
+    --texte-secondaire: #94a3b8;
+    --gris-doux: #e8e6e1;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+    background: var(--bleu-nuit);
+    color: var(--texte-clair);
+    min-height: 100vh;
+  }
+  header {
+    background: var(--bleu-nuit);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .header-left { display: flex; flex-direction: column; align-items: flex-start; }
+  .brand-agoria { font-family: 'Playfair Display', Georgia, serif; font-size: 2rem; font-weight: 700; color: #fff; letter-spacing: 0.5px; line-height: 1.1; }
+  .brand-agoria .ia { color: var(--corail); }
+  .brand-by { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: var(--texte-secondaire); margin-top: 3px; }
+  .brand-by a { color: var(--corail); text-decoration: none; font-weight: 500; }
+  .header-sep { width: 1px; height: 48px; background: rgba(255,255,255,0.12); }
+  .header-right img { height: 52px; width: auto; opacity: 0.9; }
+  .container { max-width: 780px; margin: 0 auto; padding: 24px 24px 40px; }
+  .welcome { text-align: center; margin-bottom: 20px; }
+  .welcome h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.8rem; font-weight: 700; color: var(--texte-clair); margin-bottom: 8px; }
+  .welcome .sub { color: var(--texte-secondaire); font-size: 1rem; line-height: 1.5; max-width: 560px; margin: 0 auto; }
+  .progress-bar { display: flex; gap: 6px; justify-content: center; margin-top: 14px; }
+  .progress-dot { width: 36px; height: 5px; border-radius: 3px; background: rgba(255,255,255,0.1); transition: background 0.3s; }
+  .progress-dot.active { background: var(--corail); }
+
+  .step { background: var(--surface); border-radius: 20px; padding: 28px 32px; margin-bottom: 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.3); color: #2d2d2d; }
+  .step-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--corail); font-weight: 600; margin-bottom: 10px; }
+  .step h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 16px; color: var(--bleu-nuit); }
+  .step h3 { font-size: 1.05rem; font-weight: 600; margin-top: 20px; margin-bottom: 12px; color: var(--bleu-nuit); }
+  .step .hint { font-size: 0.88rem; color: #64748b; margin-bottom: 14px; line-height: 1.5; }
+
+  .option-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .option-card { padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 14px; cursor: pointer; text-align: center; font-size: 1rem; transition: all 0.2s; background: #fff; user-select: none; }
+  .option-card:hover { border-color: var(--corail); background: #fef6f4; }
+  .option-card.selected { border-color: var(--corail); background: var(--corail); color: #fff; }
+  .option-card.selected .card-desc { color: rgba(255,255,255,0.8); }
+  .card-label { font-weight: 600; font-size: 1rem; margin-bottom: 3px; }
+  .card-desc { font-size: 0.8rem; color: #64748b; line-height: 1.3; }
+
+  .chip-grid { display: flex; flex-wrap: wrap; gap: 9px; }
+  .chip { padding: 9px 18px; border: 2px solid #e2e8f0; border-radius: 24px; cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: all 0.2s; user-select: none; color: #334155; }
+  .chip:hover { border-color: var(--corail); color: var(--corail); }
+  .chip.selected { border-color: var(--corail); background: var(--corail); color: #fff; }
+
+  textarea, input[type="text"] { width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 14px; font-size: 0.95rem; font-family: 'DM Sans', sans-serif; resize: vertical; transition: border-color 0.2s; background: #fff; min-height: 80px; color: #1e293b; line-height: 1.5; }
+  input[type="text"] { min-height: auto; }
+  textarea::placeholder, input[type="text"]::placeholder { color: #94a3b8; }
+  textarea:focus, input[type="text"]:focus { outline: none; border-color: var(--corail); }
+
+  .slider-row { display: flex; align-items: center; gap: 14px; }
+  .slider-row input[type="range"] { flex: 1; accent-color: var(--corail); height: 6px; }
+  .slider-val { font-size: 1.4rem; font-weight: 700; color: var(--corail); min-width: 32px; text-align: center; }
+  .slider-labels { display: flex; justify-content: space-between; font-size: 0.78rem; color: #94a3b8; margin-top: 4px; }
+
+  .nav-btns { display: flex; gap: 14px; justify-content: flex-end; margin-top: 20px; }
+  .btn { padding: 13px 30px; border: none; border-radius: 14px; font-size: 1rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; }
+  .btn-next { background: var(--corail); color: #fff; }
+  .btn-next:hover { background: var(--corail-hover); }
+  .btn-back { background: transparent; color: var(--corail); border: 2px solid var(--corail); }
+  .btn-submit { background: var(--bleu-nuit); color: #fff; font-size: 1.05rem; padding: 16px 40px; }
+  .btn-submit:hover { background: #2a2a4e; }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .success-screen { text-align: center; padding: 60px 24px; }
+  .success-screen .check-icon { width: 80px; height: 80px; margin: 0 auto 20px; background: var(--corail); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .success-screen .check-icon svg { width: 40px; height: 40px; stroke: #fff; fill: none; stroke-width: 2.5; }
+  .success-screen h2 { color: var(--texte-clair); font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 12px; }
+  .success-screen p { color: var(--texte-secondaire); line-height: 1.6; font-size: 1.05rem; }
+  .error-screen { text-align: center; padding: 60px 24px; }
+  .error-screen h2 { color: var(--corail); font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 12px; }
+  .error-screen p { color: var(--texte-secondaire); line-height: 1.6; }
+  .loader { text-align: center; padding: 80px 24px; color: var(--texte-secondaire); font-size: 1.1rem; }
+
+  @media (max-width: 520px) {
+    header { padding: 16px 16px; gap: 20px; }
+    .brand-agoria { font-size: 1.5rem; }
+    .header-right img { height: 38px; }
+    .container { padding: 20px 16px 32px; }
+    .welcome h1 { font-size: 1.4rem; }
+    .step { padding: 22px 18px; }
+    .option-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const APP = document.getElementById('app');
+const TOKEN = new URLSearchParams(window.location.search).get('token');
+let PRENOM = '';
+let ACTION_NOM = '';
+let currentStep = 0;
+
+const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.port === '5050';
+const SUPABASE_URL = 'https://nggsfmxlopjulnppsxna.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5nZ3NmbXhsb3BqdWxucHBzeG5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwMjQ3ODAsImV4cCI6MjA5MDYwMDc4MH0.wDyuGciPMGijOFo5WtyIyqsEDe2QUgwp8g0xJcsPyvI';
+
+async function supabaseGet(path) {
+  const resp = await fetch(SUPABASE_URL + '/rest/v1/' + path, {
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Accept-Profile': 'formation_data' }
+  });
+  return resp.json();
+}
+async function supabasePatch(table, filters, data) {
+  const resp = await fetch(SUPABASE_URL + '/rest/v1/' + table + '?' + filters, {
+    method: 'PATCH',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Profile': 'formation_data', 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+    body: JSON.stringify(data)
+  });
+  return resp.json();
+}
+
+const TOTAL_STEPS = 4;
+const answers = {
+  frequence_usage: '',
+  outils_utilises: [],
+  usage_concret: '',
+  decision_aidee: '',
+  decision_description: '',
+  confiance_decision: 5,
+  changement_principal: '',
+  assistant_cree: '',
+  partage_acquis: '',
+  sujets_approfondissement: [],
+  interet_accompagnement: '',
+  mot_conclusion: ''
+};
+
+const ICONS = {
+  check: '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>'
+};
+
+const OUTILS = ['ChatGPT', 'Claude', 'Gemini', 'Copilot', 'Perplexity', 'Mistral', 'NotebookLM', 'EvidencAI', 'Autre'];
+const SUJETS = ['Prompting avancé', 'Agents IA', 'Sécurité & confidentialité', 'IA et données métier', 'Automatisation', 'Autre'];
+
+function headerHTML() {
+  const logoSrc = IS_LOCAL ? '/assets/alia-logo-blanc.png' : 'https://www.alia-formation.com/wp-content/uploads/2024/01/logo-alia-blanc.png';
+  return '<header>'
+    + '<div class="header-left">'
+    + '<span class="brand-agoria">Agor<span class="ia">IA</span></span>'
+    + '<span class="brand-by">by <a href="https://www.evidencai.com" target="_blank">Evidenc<span style="color:var(--corail);">AI</span></a></span>'
+    + '</div>'
+    + '<div class="header-sep"></div>'
+    + '<div class="header-right">'
+    + '<img src="' + logoSrc + '" alt="ALIA Formation" onerror="this.style.display=\'none\'" />'
+    + '</div>'
+    + '</header>';
+}
+
+async function init() {
+  if (!TOKEN) { PRENOM = 'Prévisualisation'; ACTION_NOM = 'Décider avec l\'IA'; renderWizard(); return; }
+  APP.innerHTML = headerHTML() + '<div class="container"><div class="loader">Chargement...</div></div>';
+  try {
+    let data;
+    if (IS_LOCAL) {
+      const resp = await fetch('/api/followup/' + TOKEN);
+      data = await resp.json();
+    } else {
+      const records = await supabaseGet('followup?token=eq.' + TOKEN + '&limit=1');
+      if (!records || records.length === 0) { showError('Lien invalide', 'Ce lien est invalide ou a expiré.'); return; }
+      const record = records[0];
+      if (record.completed_at) { showSuccess('Déjà complété', 'Vous avez déjà répondu à ce questionnaire. Merci !'); return; }
+      let prenom = 'Participant';
+      if (record.participant_id) {
+        const parts = await supabaseGet('participants?id=eq.' + record.participant_id + '&limit=1');
+        if (parts && parts.length > 0) prenom = parts[0].prenom || 'Participant';
+      }
+      // Récupérer le nom de l'action
+      let actionNom = 'votre formation';
+      if (record.session_id) {
+        const sess = await supabaseGet('sessions?id=eq.' + record.session_id + '&limit=1');
+        if (sess && sess.length > 0 && sess[0].action_id) {
+          const acts = await supabaseGet('actions?id=eq.' + sess[0].action_id + '&limit=1');
+          if (acts && acts.length > 0) actionNom = acts[0].nom || actionNom;
+        }
+      }
+      data = { token: TOKEN, prenom: prenom, action_nom: actionNom };
+    }
+    if (data.error) {
+      if (data.completed) showSuccess('Déjà complété', 'Vous avez déjà répondu à ce questionnaire. Merci !');
+      else showError('Lien expiré', data.error);
+      return;
+    }
+    PRENOM = data.prenom || 'Participant';
+    ACTION_NOM = data.action_nom || 'votre formation';
+    renderWizard();
+  } catch(e) {
+    showError('Erreur de connexion', 'Impossible de contacter le serveur. Réessayez dans quelques instants.');
+  }
+}
+
+function showError(t, m) {
+  APP.innerHTML = headerHTML() + '<div class="container"><div class="error-screen"><h2>' + t + '</h2><p>' + m + '</p></div></div>';
+}
+function showSuccess(t, m) {
+  APP.innerHTML = headerHTML() + '<div class="container"><div class="success-screen"><div class="check-icon">' + ICONS.check + '</div><h2>' + t + '</h2><p>' + m + '</p></div>'
+    + '<div style="margin-top:48px;border-top:1px solid rgba(255,255,255,0.08);padding-top:40px;text-align:center">'
+    + '<a href="https://evidencai.com" target="_blank" style="display:inline-block;margin-bottom:20px;text-decoration:none">'
+    + '<span style="font-family:Playfair Display,Georgia,serif;font-size:2.2rem;font-weight:700;color:#fff;letter-spacing:0.5px">Evidenc<span style="color:var(--corail)">AI</span></span>'
+    + '</a>'
+    + '<p style="color:var(--texte-secondaire);font-size:0.95rem;line-height:1.6;max-width:460px;margin:0 auto 24px">L\'IA au service de vos décisions. Découvrez toutes nos prestations :</p>'
+    + '<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:28px">'
+    + '<span style="padding:8px 18px;border:1px solid rgba(255,255,255,0.15);border-radius:24px;font-size:0.88rem;font-weight:500;color:var(--texte-clair);background:rgba(255,255,255,0.06)">Formations IA</span>'
+    + '<span style="padding:8px 18px;border:1px solid rgba(255,255,255,0.15);border-radius:24px;font-size:0.88rem;font-weight:500;color:var(--texte-clair);background:rgba(255,255,255,0.06)">Ateliers dirigeants</span>'
+    + '<span style="padding:8px 18px;border:1px solid rgba(255,255,255,0.15);border-radius:24px;font-size:0.88rem;font-weight:500;color:var(--texte-clair);background:rgba(255,255,255,0.06)">Solutions IA sur mesure</span>'
+    + '<span style="padding:8px 18px;border:1px solid rgba(255,255,255,0.15);border-radius:24px;font-size:0.88rem;font-weight:500;color:var(--texte-clair);background:rgba(255,255,255,0.06)">Outils IA métier</span>'
+    + '</div>'
+    + '<a href="https://evidencai.com" target="_blank" style="display:inline-block;padding:13px 32px;background:var(--corail);color:#fff;border-radius:14px;font-size:1rem;font-weight:600;text-decoration:none;font-family:DM Sans,sans-serif;transition:background 0.2s">Visiter EvidencAI.com</a>'
+    + '</div>'
+    + '</div>';
+}
+
+function renderWizard() {
+  const steps = [renderStep1, renderStep2, renderStep3, renderStep4];
+  APP.innerHTML = headerHTML()
+    + '<div class="container">'
+    + '<div class="welcome"><h1>Rebonjour ' + PRENOM + ' !</h1>'
+    + '<p class="sub">Quelques semaines après la formation « ' + ACTION_NOM + ' », nous aimerions savoir ce qui a changé pour vous. Durée : 2 minutes.</p>'
+    + '<div class="progress-bar">'
+    + steps.map((_, i) => '<div class="progress-dot' + (i <= currentStep ? ' active' : '') + '"></div>').join('')
+    + '</div>'
+    + '</div>'
+    + '<div id="stepContainer"></div></div>';
+  steps[currentStep]();
+}
+
+function nav(canNext) {
+  let h = '<div class="nav-btns">';
+  if (currentStep > 0) h += '<button class="btn btn-back" onclick="prevStep()">Précédent</button>';
+  if (currentStep < TOTAL_STEPS - 1) h += '<button class="btn btn-next" id="nextBtn" onclick="nextStep()"' + (canNext ? '' : ' disabled') + '>Suivant</button>';
+  else h += '<button class="btn btn-submit" id="submitBtn" onclick="submitForm()">Envoyer mes réponses</button>';
+  h += '</div>';
+  return h;
+}
+function nextStep() { currentStep++; renderWizard(); }
+function prevStep() { currentStep--; renderWizard(); }
+
+function toggleArr(field, val) {
+  const idx = answers[field].indexOf(val);
+  if (idx >= 0) answers[field].splice(idx, 1);
+  else answers[field].push(val);
+  const stepFn = [renderStep1, renderStep2, renderStep3, renderStep4][currentStep];
+  stepFn();
+}
+function esc(s) { return s.replace(/'/g, "\\'"); }
+
+// === ÉTAPE 1 : Usage réel depuis la formation ===
+function renderStep1() {
+  const FREQUENCES = [
+    { id: 'pas_du_tout', label: 'Pas du tout' },
+    { id: 'ponctuellement', label: 'Ponctuellement' },
+    { id: 'regulierement', label: 'Régulièrement' },
+    { id: 'quotidiennement', label: 'Quotidiennement' }
+  ];
+  const c = document.getElementById('stepContainer');
+  c.innerHTML = '<div class="step"><div class="step-label">Étape 1/' + TOTAL_STEPS + ' — Usage réel</div>'
+    + '<h2>Utilisez-vous l\'IA dans votre activité professionnelle ?</h2>'
+    + '<div class="option-grid">' + FREQUENCES.map(f =>
+      '<div class="option-card' + (answers.frequence_usage === f.id ? ' selected' : '') + '" onclick="answers.frequence_usage=\'' + f.id + '\';renderStep1()">'
+      + '<div class="card-label">' + f.label + '</div></div>'
+    ).join('') + '</div>'
+    + '<h3>Quels outils utilisez-vous ?</h3>'
+    + '<p class="hint">Plusieurs choix possibles.</p>'
+    + '<div class="chip-grid">' + OUTILS.map(o =>
+      '<div class="chip' + (answers.outils_utilises.includes(o) ? ' selected' : '') + '" onclick="toggleArr(\'outils_utilises\',\'' + o + '\')">' + o + '</div>'
+    ).join('') + '</div>'
+    + '<h3>Décrivez un usage concret que vous avez mis en place</h3>'
+    + '<p class="hint">Un exemple réel de votre quotidien professionnel.</p>'
+    + '<textarea placeholder="Ex : J\'utilise Claude pour préparer mes réunions clients, analyser des devis fournisseurs..." oninput="answers.usage_concret=this.value">' + (answers.usage_concret || '') + '</textarea>'
+    + nav(!!answers.frequence_usage) + '</div>';
+}
+
+// === ÉTAPE 2 : Impact sur les décisions ===
+function renderStep2() {
+  const DECISIONS = [
+    { id: 'pas_encore', label: 'Pas encore' },
+    { id: 'une_fois', label: 'Oui, une fois' },
+    { id: 'plusieurs_fois', label: 'Oui, plusieurs fois' }
+  ];
+  const c = document.getElementById('stepContainer');
+  c.innerHTML = '<div class="step"><div class="step-label">Étape 2/' + TOTAL_STEPS + ' — Impact décisionnel</div>'
+    + '<h2>L\'IA vous a-t-elle aidé à prendre ou préparer une décision importante ?</h2>'
+    + '<div class="option-grid" style="grid-template-columns:1fr 1fr 1fr">' + DECISIONS.map(d =>
+      '<div class="option-card' + (answers.decision_aidee === d.id ? ' selected' : '') + '" onclick="answers.decision_aidee=\'' + d.id + '\';renderStep2()">'
+      + '<div class="card-label">' + d.label + '</div></div>'
+    ).join('') + '</div>'
+    + (answers.decision_aidee && answers.decision_aidee !== 'pas_encore' ?
+      '<h3>Décrivez brièvement</h3>'
+      + '<textarea placeholder="Ex : J\'ai utilisé l\'IA pour analyser 3 offres de prestataires et structurer mes critères de choix..." oninput="answers.decision_description=this.value">' + (answers.decision_description || '') + '</textarea>'
+    : '')
+    + '<h3>Votre niveau de confiance dans l\'IA pour vous aider à décider</h3>'
+    + '<div class="slider-row">'
+    + '<input type="range" min="1" max="10" value="' + answers.confiance_decision + '" oninput="answers.confiance_decision=parseInt(this.value);this.nextElementSibling.textContent=this.value" />'
+    + '<div class="slider-val">' + answers.confiance_decision + '</div>'
+    + '</div>'
+    + '<div class="slider-labels"><span>Pas confiance</span><span>Totale confiance</span></div>'
+    + nav(!!answers.decision_aidee) + '</div>';
+}
+
+// === ÉTAPE 3 : Ce qui a changé ===
+function renderStep3() {
+  const ASSISTANT = [
+    { id: 'non', label: 'Non' },
+    { id: 'essaye', label: 'J\'ai essayé' },
+    { id: 'oui_actif', label: 'Oui, je l\'utilise' }
+  ];
+  const PARTAGE = [
+    { id: 'non', label: 'Non' },
+    { id: 'informel', label: 'Informellement' },
+    { id: 'forme', label: 'J\'ai formé quelqu\'un' }
+  ];
+  const c = document.getElementById('stepContainer');
+  c.innerHTML = '<div class="step"><div class="step-label">Étape 3/' + TOTAL_STEPS + ' — Ce qui a changé</div>'
+    + '<h2>Qu\'est-ce qui a le plus changé dans votre rapport à l\'IA ?</h2>'
+    + '<p class="hint">Compréhension, confiance, habitudes de travail, regard critique...</p>'
+    + '<textarea placeholder="Ex : Je ne vois plus l\'IA comme un gadget, je l\'utilise comme un vrai outil d\'aide à la réflexion..." oninput="answers.changement_principal=this.value">' + (answers.changement_principal || '') + '</textarea>'
+    + '<h3>Avez-vous créé ou personnalisé un assistant IA ?</h3>'
+    + '<div class="option-grid" style="grid-template-columns:1fr 1fr 1fr">' + ASSISTANT.map(a =>
+      '<div class="option-card' + (answers.assistant_cree === a.id ? ' selected' : '') + '" onclick="answers.assistant_cree=\'' + a.id + '\';renderStep3()">'
+      + '<div class="card-label">' + a.label + '</div></div>'
+    ).join('') + '</div>'
+    + '<h3>Avez-vous partagé vos acquis avec des collègues ?</h3>'
+    + '<div class="option-grid" style="grid-template-columns:1fr 1fr 1fr">' + PARTAGE.map(p =>
+      '<div class="option-card' + (answers.partage_acquis === p.id ? ' selected' : '') + '" onclick="answers.partage_acquis=\'' + p.id + '\';renderStep3()">'
+      + '<div class="card-label">' + p.label + '</div></div>'
+    ).join('') + '</div>'
+    + nav(true) + '</div>';
+}
+
+// === ÉTAPE 4 : Suite et besoins ===
+function renderStep4() {
+  const ACCOMPAGNEMENT = [
+    { id: 'non', label: 'Non merci' },
+    { id: 'peut_etre', label: 'Peut-être' },
+    { id: 'oui', label: 'Oui, contactez-moi' }
+  ];
+  const c = document.getElementById('stepContainer');
+  c.innerHTML = '<div class="step"><div class="step-label">Étape 4/' + TOTAL_STEPS + ' — Et après ?</div>'
+    + '<h2>Quel sujet aimeriez-vous approfondir ?</h2>'
+    + '<p class="hint">Plusieurs choix possibles.</p>'
+    + '<div class="chip-grid">' + SUJETS.map(s =>
+      '<div class="chip' + (answers.sujets_approfondissement.includes(s) ? ' selected' : '') + '" onclick="toggleArr(\'sujets_approfondissement\',\'' + esc(s) + '\')">' + s + '</div>'
+    ).join('') + '</div>'
+    + '<h3>Seriez-vous intéressé par un accompagnement personnalisé ?</h3>'
+    + '<div class="option-grid" style="grid-template-columns:1fr 1fr 1fr">' + ACCOMPAGNEMENT.map(a =>
+      '<div class="option-card' + (answers.interet_accompagnement === a.id ? ' selected' : '') + '" onclick="answers.interet_accompagnement=\'' + a.id + '\';renderStep4()">'
+      + '<div class="card-label">' + a.label + '</div></div>'
+    ).join('') + '</div>'
+    + '<h3>Un mot pour conclure ?</h3>'
+    + '<p class="hint">Retour libre, suggestion, anecdote...</p>'
+    + '<textarea placeholder="Ce qui vous vient à l\'esprit..." oninput="answers.mot_conclusion=this.value">' + (answers.mot_conclusion || '') + '</textarea>'
+    + nav(true) + '</div>';
+}
+
+async function submitForm() {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Envoi en cours...';
+  try {
+    let ok = false;
+    if (IS_LOCAL) {
+      const resp = await fetch('/api/followup/' + TOKEN, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(answers)
+      });
+      const data = await resp.json();
+      ok = data.ok;
+      if (!ok) { alert('Erreur : ' + (data.error || 'inconnue')); }
+    } else {
+      const now = new Date().toISOString();
+      const result = await supabasePatch('followup', 'token=eq.' + TOKEN, {
+        frequence_usage: answers.frequence_usage,
+        outils_utilises: answers.outils_utilises,
+        usage_concret: answers.usage_concret,
+        decision_aidee: answers.decision_aidee,
+        confiance_decision: answers.confiance_decision,
+        reponses: {
+          decision_description: answers.decision_description,
+          changement_principal: answers.changement_principal,
+          assistant_cree: answers.assistant_cree,
+          partage_acquis: answers.partage_acquis,
+          sujets_approfondissement: answers.sujets_approfondissement,
+          interet_accompagnement: answers.interet_accompagnement,
+          mot_conclusion: answers.mot_conclusion
+        },
+        completed_at: now
+      });
+      ok = (result && result.length > 0);
+    }
+    if (ok) {
+      showSuccess('Merci ' + PRENOM + ' !', 'Vos retours sont précieux. Ils nous permettent d\'améliorer nos formations et de mieux vous accompagner. À bientôt !');
+    } else {
+      btn.disabled = false; btn.textContent = 'Envoyer mes réponses';
+    }
+  } catch(e) {
+    btn.disabled = false; btn.textContent = 'Envoyer mes réponses';
+    alert('Erreur de connexion. Réessayez.');
+  }
+}
+
+init();
+</script>
+</body>
+</html>

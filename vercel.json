@@ -2,6 +2,7 @@
   "rewrites": [
     { "source": "/preformation", "destination": "/preformation.html" },
     { "source": "/quiz-email", "destination": "/quiz-email.html" },
-    { "source": "/questionnaire", "destination": "/questionnaire.html" }
+    { "source": "/questionnaire", "destination": "/questionnaire.html" },
+    { "source": "/followup", "destination": "/followup.html" }
   ]
 }
