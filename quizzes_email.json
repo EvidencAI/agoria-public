@@ -1,12 +1,12 @@
 {
-  "S5": {
-    "id": "S5",
-    "titre": "Bilan Matinée J1",
-    "description": "S1→S5 : ouverture, 4 piliers, IA générative, paysage LLM, risques en action",
+  "J1-06": {
+    "id": "J1-06",
+    "titre": "Bilan Jour 1",
+    "description": "Fondamentaux IA, paysage LLM, 4 Piliers, C.R.T.F., hallucinations, sécurité",
     "jour": 1,
     "questions": [
       {
-        "id": "S5Q1",
+        "id": "FJ1Q1",
         "question": "Quels sont les 4 piliers de l'IA maîtrisée ?",
         "options": [
           "Créer, Vérifier, Publier, Recommencer",
@@ -19,7 +19,7 @@
         "explication": "Les 4 piliers : Contextualiser, Vérifier, Recadrer, Itérer. Le socle de toute utilisation responsable de l'IA."
       },
       {
-        "id": "S5Q2",
+        "id": "FJ1Q2",
         "question": "Quand vous posez une question à une IA, votre message représente quelle part de ce que le modèle traite ?",
         "options": [
           "Environ 80%",
@@ -28,24 +28,24 @@
           "100%, c'est tout ce qu'il reçoit"
         ],
         "reponse_correcte": 2,
-        "pilier": "Pilier 1",
+        "pilier": "Contextualiser",
         "explication": "L'iceberg des tokens : votre message fait souvent moins de 10% du contexte total. Le reste est invisible (instructions système, historique, garde-fous)."
       },
       {
-        "id": "S5Q3",
-        "question": "Un LLM \"nu\" (sans plugins) est capable de...",
+        "id": "FJ1Q3",
+        "question": "Que signifient les lettres C.R.T.F. ?",
         "options": [
-          "Chercher des infos sur internet en temps réel",
-          "Lire intégralement un document PDF de 200 pages",
-          "Prédire le mot le plus probable à chaque étape pour générer du texte",
-          "Se souvenir de votre conversation d'hier"
+          "Contexte, Rôle, Tâche, Format",
+          "Création, Réflexion, Test, Finalisation",
+          "Contexte, Résultat, Ton, Format",
+          "Communication, Rôle, Timing, Feedback"
         ],
-        "reponse_correcte": 2,
-        "pilier": "Pilier 1",
-        "explication": "Nativement, un LLM ne fait qu'une chose : générer du texte probable. Tout le reste (mémoire, web, docs) est ajouté par-dessus."
+        "reponse_correcte": 0,
+        "pilier": "Contextualiser",
+        "explication": "Contexte, Rôle, Tâche, Format. Comme Ctrl+F, mais pour trouver la bonne réponse."
       },
       {
-        "id": "S5Q4",
+        "id": "FJ1Q4",
         "question": "Le Shadow AI, c'est quand...",
         "options": [
           "L'IA travaille la nuit automatiquement",
@@ -55,57 +55,10 @@
         ],
         "reponse_correcte": 1,
         "pilier": "Sécurité",
-        "explication": "49% des salariés utilisent l'IA sans en informer leur entreprise. C'est le Shadow AI, un risque majeur pour les dirigeantes."
+        "explication": "49% des salariés utilisent l'IA sans en informer leur entreprise. C'est le Shadow AI, un risque majeur pour les dirigeants."
       },
       {
-        "id": "S5Q5",
-        "question": "Lors de la démo du mail d'excuse, que s'est-il passé ?",
-        "options": [
-          "Le mail a été bloqué par un filtre anti-spam",
-          "Le mail est parti exactement comme Stéphane l'avait validé",
-          "Az a envoyé un mail complètement différent de celui validé",
-          "Rien, c'était une simulation"
-        ],
-        "reponse_correcte": 2,
-        "pilier": "Pilier 2",
-        "explication": "La validation humaine ne vaut rien sans contrôle de l'exécution réelle. Vous voyez une chose à l'écran, l'IA peut en faire une autre."
-      },
-      {
-        "id": "S5Q6",
-        "question": "Dans le BullshitBench (test des questions absurdes), que font la plupart des IA ?",
-        "options": [
-          "Elles refusent systématiquement de répondre",
-          "Elles répondent avec assurance à des questions qui n'ont aucun sens",
-          "Elles demandent des précisions avant de répondre",
-          "Elles signalent que la question est absurde"
-        ],
-        "reponse_correcte": 1,
-        "pilier": "Pilier 2",
-        "explication": "La plupart des IA répondent sérieusement à des questions absurdes. Seul Claude détecte le non-sens dans 87% des cas."
-      }
-    ]
-  },
-  "S11": {
-    "id": "S11",
-    "titre": "Bilan Après-midi J1",
-    "description": "S6→S11 : C.R.T.F., mécaniques IA, ateliers prompt, sécurité données",
-    "jour": 1,
-    "questions": [
-      {
-        "id": "S11Q1",
-        "question": "Que signifient les lettres C.R.T.F. ?",
-        "options": [
-          "Contexte, Rôle, Tâche, Format",
-          "Création, Réflexion, Test, Finalisation",
-          "Contexte, Résultat, Ton, Format",
-          "Communication, Rôle, Timing, Feedback"
-        ],
-        "reponse_correcte": 0,
-        "pilier": "Pilier 1",
-        "explication": "Contexte, Rôle, Tâche, Format. Comme Ctrl+F, mais pour trouver la bonne réponse."
-      },
-      {
-        "id": "S11Q2",
+        "id": "FJ1Q5",
         "question": "Pourquoi la même question posée deux fois à une IA peut donner des réponses différentes ?",
         "options": [
           "Parce que l'IA apprend entre les deux questions",
@@ -114,11 +67,11 @@
           "C'est un bug, elle devrait donner la même réponse"
         ],
         "reponse_correcte": 1,
-        "pilier": "Pilier 2",
-        "explication": "La température est un réglage interne qui explique pourquoi la même question donne des résultats différents. Ce n'est pas un bug."
+        "pilier": "Vérifier",
+        "explication": "La température introduit de la variabilité. Ce n'est pas un bug, c'est mécanique."
       },
       {
-        "id": "S11Q3",
+        "id": "FJ1Q6",
         "question": "En version gratuite de ChatGPT, vos conversations servent à...",
         "options": [
           "Rien, elles sont supprimées immédiatement",
@@ -131,20 +84,7 @@
         "explication": "En gratuit, vos conversations servent à entraîner les futurs modèles. C'est le prix de la gratuité."
       },
       {
-        "id": "S11Q4",
-        "question": "Quand vous donnez un rôle à l'IA dans votre prompt (ex: \"Tu es un DRH expérimenté\"), que se passe-t-il ?",
-        "options": [
-          "Rien de spécial, c'est juste décoratif",
-          "L'IA active une persona qui ajuste vocabulaire, structure et niveau de détail",
-          "L'IA se connecte à une base de données RH",
-          "L'IA refuse car elle n'est pas vraiment DRH"
-        ],
-        "reponse_correcte": 1,
-        "pilier": "Pilier 4",
-        "explication": "Donner un rôle active mécaniquement une persona. L'IA ajuste tout : vocabulaire, structure, ton."
-      },
-      {
-        "id": "S11Q5",
+        "id": "FJ1Q7",
         "question": "Avant de mettre une information dans un prompt, quel réflexe adopter ?",
         "options": [
           "Vérifier que l'information est vraie",
@@ -155,56 +95,43 @@
         "reponse_correcte": 1,
         "pilier": "Sécurité",
         "explication": "Le réflexe sécurité : si ça fuitait, qu'est-ce que je perdrais ? Simple, efficace."
-      },
-      {
-        "id": "S11Q6",
-        "question": "En atelier, la différence entre un mauvais prompt et un bon prompt C.R.T.F. vient principalement de...",
-        "options": [
-          "La longueur du prompt (plus c'est long, mieux c'est)",
-          "Le choix de l'IA utilisée (certaines sont meilleures)",
-          "La qualité du contexte, du rôle et du format donnés à l'IA",
-          "La politesse employée dans le prompt"
-        ],
-        "reponse_correcte": 2,
-        "pilier": "Pilier 1",
-        "explication": "Même outil, même sujet. Juste la façon de poser la question qui change le résultat."
       }
     ]
   },
-  "S12": {
-    "id": "S12",
+  "J2-01": {
+    "id": "J2-01",
     "titre": "Réactivation J2",
-    "description": "Rappel J1 complet : piliers, C.R.T.F., mécaniques, sécurité",
+    "description": "Rappel J1 complet : piliers, C.R.T.F., mécaniques, sécurité (une semaine après)",
     "jour": 2,
     "questions": [
       {
-        "id": "S12Q1",
-        "question": "Que signifie le C dans C.R.T.F. ?",
+        "id": "DJ2Q1",
+        "question": "Quand vous ouvrez une nouvelle conversation avec une IA, de quoi se souvient-elle ?",
         "options": [
-          "Corriger",
-          "Créer",
-          "Contextualiser",
-          "Comparer"
+          "De tout",
+          "Des 10 derniers messages",
+          "De rien du tout",
+          "Ça dépend du jour"
         ],
         "reponse_correcte": 2,
-        "pilier": "Pilier 1",
-        "explication": "Le C de Contextualiser. Sans contexte, l'IA produit du générique."
+        "pilier": "Contextualiser",
+        "explication": "Chaque nouvelle conversation repart de zéro. L'IA n'a aucune mémoire de vos échanges précédents."
       },
       {
-        "id": "S12Q2",
-        "question": "Un LLM est entraîné en lisant des milliards de textes. Quand il vous répond, il...",
+        "id": "DJ2Q2",
+        "question": "Un LLM \"nu\" (sans plugins) est capable de...",
         "options": [
-          "Cherche la bonne réponse dans sa base de données",
-          "Calcule la suite de mots la plus probable",
-          "Comprend votre question et raisonne logiquement",
-          "Copie une réponse existante et l'adapte"
+          "Chercher des infos sur internet en temps réel",
+          "Lire intégralement un document PDF de 200 pages",
+          "Prédire le mot le plus probable à chaque étape pour générer du texte",
+          "Se souvenir de votre conversation d'hier"
         ],
-        "reponse_correcte": 1,
-        "pilier": "Pilier 1",
-        "explication": "L'IA ne sait rien, elle ne comprend rien. Elle prédit le mot suivant le plus probable."
+        "reponse_correcte": 2,
+        "pilier": "Contextualiser",
+        "explication": "Nativement, un LLM ne fait qu'une chose : générer du texte probable. Tout le reste (mémoire, web, docs) est ajouté par-dessus."
       },
       {
-        "id": "S12Q3",
+        "id": "DJ2Q3",
         "question": "Quand l'IA produit une information fausse avec assurance, on appelle ça...",
         "options": [
           "Un bug technique",
@@ -213,24 +140,50 @@
           "Une erreur de prompt"
         ],
         "reponse_correcte": 2,
-        "pilier": "Pilier 2",
+        "pilier": "Vérifier",
         "explication": "L'hallucination : l'IA invente avec la même assurance que quand elle a raison. C'est le piège."
       },
       {
-        "id": "S12Q4",
-        "question": "Dans une longue conversation avec une IA, le risque principal est que...",
+        "id": "DJ2Q4",
+        "question": "Que signifie le C dans la méthode C.R.T.F. ?",
         "options": [
-          "L'IA devienne plus lente",
-          "L'IA perde le contexte donné au début de l'échange",
-          "L'IA refuse de continuer après trop de messages",
-          "Les réponses deviennent automatiquement moins fiables"
+          "Créativité",
+          "Contexte",
+          "Conversation",
+          "Contrôle"
         ],
         "reponse_correcte": 1,
-        "pilier": "Pilier 1",
-        "explication": "La fenêtre de contexte est limitée. Dans un long échange, répétez les infos clés."
+        "pilier": "Contextualiser",
+        "explication": "C = Contexte. Sans contexte, l'IA devine. Et quand elle devine, elle se trompe avec assurance."
       },
       {
-        "id": "S12Q5",
+        "id": "DJ2Q5",
+        "question": "Le Shadow AI, c'est quoi ?",
+        "options": [
+          "Une IA qui espionne",
+          "L'utilisation non autorisée d'IA par les salariés",
+          "Un mode sombre de ChatGPT",
+          "Un virus informatique"
+        ],
+        "reponse_correcte": 1,
+        "pilier": "Sécurité",
+        "explication": "49% des salariés utilisent l'IA sans en informer leur entreprise. C'est le Shadow AI."
+      },
+      {
+        "id": "DJ2Q6",
+        "question": "Quel est le premier réflexe face à une réponse de l'IA ?",
+        "options": [
+          "La copier-coller directement, elle est souvent juste",
+          "Vérifier l'information avant de l'utiliser",
+          "La reformuler dans ses propres mots pour faire plus naturel",
+          "Demander à l'IA si elle est sûre de sa réponse"
+        ],
+        "reponse_correcte": 1,
+        "pilier": "Vérifier",
+        "explication": "Pilier 2 : Vérifier. Toujours. L'IA ne distingue pas le vrai du faux."
+      },
+      {
+        "id": "DJ2Q7",
         "question": "Payer 20€/mois pour ChatGPT Plus ou Claude Pro change quoi sur vos données ?",
         "options": [
           "Vos conversations ne sont plus utilisées pour l'entraînement",
@@ -241,31 +194,18 @@
         "reponse_correcte": 1,
         "pilier": "Sécurité",
         "explication": "20€/mois ne change presque rien côté données. Il faut du Enterprise pour avoir le niveau de Gmail gratuit."
-      },
-      {
-        "id": "S12Q6",
-        "question": "Quel est le premier réflexe face à une réponse de l'IA ?",
-        "options": [
-          "La copier-coller directement, elle est souvent juste",
-          "Vérifier l'information avant de l'utiliser",
-          "La reformuler dans ses propres mots pour faire plus naturel",
-          "Demander à l'IA si elle est sûre de sa réponse"
-        ],
-        "reponse_correcte": 1,
-        "pilier": "Pilier 2",
-        "explication": "Pilier 2 : Vérifier. Toujours. L'IA ne distingue pas le vrai du faux."
       }
     ]
   },
-  "S17": {
-    "id": "S17",
-    "titre": "Bilan Matinée J2",
-    "description": "S13→S17 : agents IA, conception, création, tests croisés, biais",
+  "J2-05": {
+    "id": "J2-05",
+    "titre": "Bilan Jour 2",
+    "description": "Assistant IA, RAG et documents, sécurité entreprise, feuille de route",
     "jour": 2,
     "questions": [
       {
-        "id": "S17Q1",
-        "question": "Un agent IA (GPT personnalisé, Projet Claude, Gem Gemini), c'est...",
+        "id": "FJ2Q1",
+        "question": "Un assistant IA (Projet Claude, GPT, Gem), c'est...",
         "options": [
           "Une IA plus puissante que la version standard",
           "Un LLM configuré avec des instructions, un contexte et des limites spécifiques à votre besoin",
@@ -273,12 +213,12 @@
           "Un logiciel séparé qui n'utilise pas de LLM"
         ],
         "reponse_correcte": 1,
-        "pilier": "Pilier 1",
-        "explication": "Un agent = un LLM + instructions + contexte + limites. Même moteur, configuration différente."
+        "pilier": "Contextualiser",
+        "explication": "Un assistant = un LLM + instructions + contexte + limites. Même moteur, configuration différente."
       },
       {
-        "id": "S17Q2",
-        "question": "Les 3 questions clés pour concevoir un agent sont...",
+        "id": "FJ2Q2",
+        "question": "Les 3 questions clés pour concevoir un assistant IA sont...",
         "options": [
           "Combien ça coûte ? Est-ce légal ? Est-ce utile ?",
           "Il fait quoi ? Il sait quoi ? Il ne fait pas quoi ?",
@@ -286,25 +226,25 @@
           "Qui l'utilise ? Quand ? Pourquoi ?"
         ],
         "reponse_correcte": 1,
-        "pilier": "Pilier 4",
-        "explication": "Il fait quoi (mission), il sait quoi (contexte), il ne fait pas quoi (limites). Trois questions, un agent qui tourne."
+        "pilier": "Itérer",
+        "explication": "Il fait quoi (mission), il sait quoi (contexte), il ne fait pas quoi (limites). Trois questions, un assistant qui tourne."
       },
       {
-        "id": "S17Q3",
-        "question": "L'exercice de tests croisés en binôme sert principalement à...",
+        "id": "FJ2Q3",
+        "question": "Le RAG (Retrieval Augmented Generation) permet à l'IA de...",
         "options": [
-          "Comparer qui a le meilleur agent",
-          "Vérifier que l'agent fonctionne aussi pour quelqu'un qui ne l'a pas créé",
-          "Apprendre à utiliser la plateforme de l'autre",
-          "Corriger les fautes d'orthographe dans les instructions"
+          "Devenir plus intelligente en apprenant de vos documents",
+          "Chercher dans vos documents pour enrichir sa réponse, sans les mémoriser",
+          "Stocker vos fichiers de façon sécurisée dans le cloud",
+          "Traduire automatiquement vos documents en plusieurs langues"
         ],
         "reponse_correcte": 1,
-        "pilier": "Pilier 4",
-        "explication": "Le regard extérieur révèle ce que le créateur ne voit plus. C'est le pilier Itérer en action."
+        "pilier": "Contextualiser",
+        "explication": "Le RAG injecte le contenu pertinent de vos documents dans le prompt. L'IA ne les apprend pas, elle les consulte."
       },
       {
-        "id": "S17Q4",
-        "question": "Quand vous créez un agent IA, pourquoi est-il important de définir ce qu'il ne doit PAS faire ?",
+        "id": "FJ2Q4",
+        "question": "Quand vous créez un assistant IA, pourquoi est-il important de définir ce qu'il ne doit PAS faire ?",
         "options": [
           "Pour économiser des tokens et réduire le coût",
           "Pour éviter qu'il improvise en dehors de son périmètre et produise des résultats inadaptés",
@@ -312,11 +252,11 @@
           "Ce n'est pas nécessaire, l'IA sait naturellement quoi éviter"
         ],
         "reponse_correcte": 1,
-        "pilier": "Pilier 3",
+        "pilier": "Recadrer",
         "explication": "Sans limites explicites, l'IA improvise. Et une IA qui improvise, c'est comme un stagiaire créatif : ça peut être un désastre."
       },
       {
-        "id": "S17Q5",
+        "id": "FJ2Q5",
         "question": "Quelles sont les 3 sources de biais de l'IA ?",
         "options": [
           "Le matériel, le logiciel et l'utilisateur",
@@ -325,11 +265,24 @@
           "Le créateur de l'IA, le fournisseur cloud et le navigateur"
         ],
         "reponse_correcte": 1,
-        "pilier": "Pilier 3",
+        "pilier": "Recadrer",
         "explication": "Données biaisées + prompt sans critères + confiance aveugle = discrimination invisible."
       },
       {
-        "id": "S17Q6",
+        "id": "FJ2Q6",
+        "question": "Pour une charte IA en entreprise, quel est le premier point à définir ?",
+        "options": [
+          "Le budget IA annuel",
+          "Quels outils sont autorisés et quelles données ne doivent jamais y entrer",
+          "Le nombre de licences à acheter",
+          "Qui est le responsable IA dans l'entreprise"
+        ],
+        "reponse_correcte": 1,
+        "pilier": "Sécurité",
+        "explication": "Avant le budget ou l'organisation : définir le cadre. Quels outils, quelles données interdites, quels usages acceptés."
+      },
+      {
+        "id": "FJ2Q7",
         "question": "Si votre IA reproduit un biais que vous n'avez pas détecté, qui est responsable ?",
         "options": [
           "L'éditeur de l'IA (OpenAI, Anthropic, Google)",
@@ -338,7 +291,7 @@
           "Le fournisseur de données d'entraînement"
         ],
         "reponse_correcte": 2,
-        "pilier": "Pilier 3",
+        "pilier": "Recadrer",
         "explication": "L'IA n'a pas décidé de discriminer. La responsabilité est toujours humaine."
       }
     ]
