@@ -205,7 +205,7 @@
     "questions": [
       {
         "id": "FJ2Q1",
-        "question": "Un assistant IA (Projet Claude, GPT, Gem), c'est...",
+        "question": "Un assistant IA configuré (dans Claude, ChatGPT ou Gemini), c'est...",
         "options": [
           "Une IA plus puissante que la version standard",
           "Un LLM configuré avec des instructions, un contexte et des limites spécifiques à votre besoin",
@@ -257,29 +257,29 @@
       },
       {
         "id": "FJ2Q5",
-        "question": "Quelles sont les 3 sources de biais de l'IA ?",
+        "question": "D'où viennent principalement les biais de l'IA ?",
         "options": [
-          "Le matériel, le logiciel et l'utilisateur",
-          "Les données d'entraînement, la formulation du prompt et l'absence de vérification",
-          "Le coût, la vitesse et la langue",
-          "Le créateur de l'IA, le fournisseur cloud et le navigateur"
+          "D'un bug du logiciel",
+          "De ses données d'entraînement, qu'elle reproduit et amplifie",
+          "Du hasard statistique",
+          "De l'utilisateur qui tape trop vite"
         ],
         "reponse_correcte": 1,
         "pilier": "Recadrer",
-        "explication": "Données biaisées + prompt sans critères + confiance aveugle = discrimination invisible."
+        "explication": "L'IA apprend sur des données humaines. Si elles sont biaisées, elle reproduit et amplifie ces biais sans s'en rendre compte."
       },
       {
         "id": "FJ2Q6",
-        "question": "Pour une charte IA en entreprise, quel est le premier point à définir ?",
+        "question": "Dans une charte IA d'entreprise, quel est le premier bloc à définir ?",
         "options": [
           "Le budget IA annuel",
-          "Quels outils sont autorisés et quelles données ne doivent jamais y entrer",
+          "Le périmètre : ce pour quoi l'IA est autorisée et ce qui est exclu",
           "Le nombre de licences à acheter",
           "Qui est le responsable IA dans l'entreprise"
         ],
         "reponse_correcte": 1,
         "pilier": "Sécurité",
-        "explication": "Avant le budget ou l'organisation : définir le cadre. Quels outils, quelles données interdites, quels usages acceptés."
+        "explication": "Bloc 1 de la charte : le périmètre. L'IA, c'est oui pour quoi, non pour quoi. Tout le reste découle de là."
       },
       {
         "id": "FJ2Q7",
