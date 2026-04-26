@@ -13,8 +13,8 @@ COPY followup.html /usr/share/nginx/html/
 COPY quizzes_email.json /usr/share/nginx/html/
 COPY assets /usr/share/nginx/html/assets
 
-# Healthcheck simple
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD wget --quiet --tries=1 --spider http://localhost/preformation.html || exit 1
+# Pas de HEALTHCHECK Docker : Coolify gere via Traefik (external HTTP check)
+# Le wget BusyBox de nginx:alpine ne supporte pas tous les flags ce qui faisait
+# echouer le healthcheck malgre nginx fonctionnel.
 
 EXPOSE 80
