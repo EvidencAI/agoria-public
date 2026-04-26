@@ -13,10 +13,10 @@ COPY followup.html /usr/share/nginx/html/
 COPY quizzes_email.json /usr/share/nginx/html/
 COPY assets /usr/share/nginx/html/assets
 
-# Healthcheck compatible BusyBox (wget --spider est buggy dans nginx:alpine).
-# Coolify exige une cle .State.Health pour son rolling update, donc on definit
-# un check minimal qui telecharge la page de pre-inscription (200 = OK).
+# Healthcheck : utiliser 127.0.0.1 (et pas localhost) car BusyBox resout
+# 'localhost' en IPv6 d'abord et nginx n'ecoute qu'en IPv4 dans ce setup.
+# Coolify exige une cle .State.Health pour son rolling update.
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
-    CMD wget -q -O /dev/null http://localhost/preformation.html || exit 1
+    CMD wget -q -O /dev/null http://127.0.0.1/preformation.html || exit 1
 
 EXPOSE 80
