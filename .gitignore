@@ -1,2 +1,6 @@
 .DS_Store
 .vercel
+
+# Backups locaux pre-bascule self-hosted (non versionnes)
+*.pre-self-hosted
+*.backup-*

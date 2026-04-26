@@ -1,0 +1,19 @@
+# Backups pre-migration (locaux uniquement)
+*.pre-self-hosted
+*.backup-*
+
+# Vercel (on quitte cette plateforme)
+.vercel
+vercel.json
+
+# Git
+.git
+.gitignore
+
+# Docker (auto-references)
+Dockerfile
+.dockerignore
+nginx.conf
+
+# Node
+node_modules

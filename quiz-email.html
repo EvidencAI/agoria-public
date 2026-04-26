@@ -80,8 +80,8 @@
 <div id="APP"></div>
 <script>
 const IS_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.port === '5050';
-const SUPABASE_URL = 'https://nggsfmxlopjulnppsxna.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5nZ3NmbXhsb3BqdWxucHBzeG5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwMjQ3ODAsImV4cCI6MjA5MDYwMDc4MH0.wDyuGciPMGijOFo5WtyIyqsEDe2QUgwp8g0xJcsPyvI';
+const SUPABASE_URL = 'https://supabase.evidencai.com';
+const SUPABASE_KEY = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc3NjE1MDA2MCwiZXhwIjo0OTMxODIzNjYwLCJyb2xlIjoiYW5vbiJ9.LNYYUzroE5n61tMfo1hh06y05MPAhFJ4aWbaPGhwp6k';
 const APP = document.getElementById('APP');
 const LETTERS = ['A','B','C','D'];
 let TOKEN = new URLSearchParams(window.location.search).get('token');
@@ -92,14 +92,14 @@ let answers = {};
 
 async function sbGet(path) {
   const resp = await fetch(SUPABASE_URL + '/rest/v1/' + path, {
-    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Accept-Profile': 'formation_data' }
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Accept-Profile': 'agoria' }
   });
   return resp.json();
 }
 async function sbPatch(table, filters, data) {
   const resp = await fetch(SUPABASE_URL + '/rest/v1/' + table + '?' + filters, {
     method: 'PATCH',
-    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Profile': 'formation_data', 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Profile': 'agoria', 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
     body: JSON.stringify(data)
   });
   return resp.json();
