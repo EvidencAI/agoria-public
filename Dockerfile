@@ -13,8 +13,10 @@ COPY followup.html /usr/share/nginx/html/
 COPY quizzes_email.json /usr/share/nginx/html/
 COPY assets /usr/share/nginx/html/assets
 
-# Pas de HEALTHCHECK Docker : Coolify gere via Traefik (external HTTP check)
-# Le wget BusyBox de nginx:alpine ne supporte pas tous les flags ce qui faisait
-# echouer le healthcheck malgre nginx fonctionnel.
+# Healthcheck compatible BusyBox (wget --spider est buggy dans nginx:alpine).
+# Coolify exige une cle .State.Health pour son rolling update, donc on definit
+# un check minimal qui telecharge la page de pre-inscription (200 = OK).
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+    CMD wget -q -O /dev/null http://localhost/preformation.html || exit 1
 
 EXPOSE 80
