@@ -10,10 +10,12 @@ vercel.json
 .git
 .gitignore
 
-# Docker (auto-references)
-Dockerfile
-.dockerignore
-nginx.conf
-
 # Node
 node_modules
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode
+.idea
