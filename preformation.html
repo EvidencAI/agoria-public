@@ -433,6 +433,15 @@ async function submitForm() {
         completed_at: now
       });
       ok = (result && result.length > 0);
+      // Enrichissement participant : aligner participants.niveau sur preformation.niveau_declare
+      // (équivalent JS de la logique Flask /api/preformation/<token>, qui n'est pas appelée en mode prod)
+      if (ok && result[0].participant_id && answers.niveau_declare) {
+        try {
+          await supabasePatch('participants', 'id=eq.' + result[0].participant_id, {
+            niveau: answers.niveau_declare
+          });
+        } catch (e) { /* non bloquant : le questionnaire est validé même si l'enrichissement échoue */ }
+      }
     }
     if (ok) {
       showSuccess('Merci ' + PRENOM + ' !', 'Vos réponses ont bien été enregistrées. Votre formateur et Az les liront avant la session pour personnaliser la formation. À très bientôt !');
