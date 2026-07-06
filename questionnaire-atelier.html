@@ -101,24 +101,21 @@ async function supabaseInsert(table, row) {
 
 const TOTAL_STEPS = 7;
 const answers = {
-  prenom: '', niveau: '', confiance: null, intention: '',
+  prenom: '', declic: '', envie: '', disposition: null,
   note_globale: null, moment: '', usage_concret: '', approfondir: [], nps: null, trois_mots: ''
 };
 
 const ICONS = { check: '<svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg>' };
 
-const NIVEAUX = [
-  { id: 'jamais', label: 'Jamais', desc: "Je n'utilise pas vraiment l'IA" },
-  { id: 'simple', label: 'Tâches simples', desc: 'Mails, traductions, résumés' },
-  { id: 'projet', label: 'Mode projet', desc: 'Vrai projet, utilisation de skills' },
-  { id: 'connecte', label: 'Outils connectés', desc: "L'IA reliée à mes fichiers et outils" },
-  { id: 'developpe', label: 'Je développe', desc: 'Vibe coding, Cowork, GitHub' }
+const DECLIC = [
+  { id: 'beaucoup', label: 'Beaucoup plus claire', desc: "Bien plus claire qu'avant" },
+  { id: 'un_peu', label: 'Un peu plus claire', desc: 'Quelques repères en plus' },
+  { id: 'pareil', label: "Pareil qu'avant", desc: 'Pas vraiment de changement' }
 ];
-const FREQUENCES = [
-  { id: 'jamais', label: 'Jamais' },
-  { id: 'mensuel', label: 'Quelques fois par mois' },
-  { id: 'hebdo', label: 'Chaque semaine' },
-  { id: 'quotidien', label: 'Tous les jours' }
+const ENVIE = [
+  { id: 'concrete', label: 'Une envie concrète', desc: "J'ai hâte de m'y mettre" },
+  { id: 'curiosite', label: 'De la curiosité', desc: 'À voir, pourquoi pas' },
+  { id: 'pas_convaincu', label: 'Pas convaincu', desc: "Pas pour moi, pour l'instant" }
 ];
 const APPROFONDIR = ['Rédiger mails et documents', 'Résumés et comptes-rendus', 'Visuels et présentations', 'Analyser données et tableaux', "L'IA pour mon métier", "Connecter l'IA à nos outils", 'Autre'];
 
@@ -180,32 +177,30 @@ function step1() {
 function step2() {
   const c = document.getElementById('stepContainer');
   c.innerHTML = '<div class="step"><div class="step-label">Étape 2/' + TOTAL_STEPS + '</div>'
-    + '<h2>Où en êtes-vous avec l\'IA maintenant ?</h2>'
-    + '<p class="hint">Après l\'atelier, choisissez la ligne la plus haute qui vous décrit.</p>'
-    + '<div class="option-grid">' + NIVEAUX.map(n =>
-      '<div class="option-card' + (answers.niveau === n.id ? ' selected' : '') + '" onclick="answers.niveau=\'' + n.id + '\';step2()">'
+    + '<h2>En sortant, l\'IA vous paraît...</h2>'
+    + '<p class="hint">Par rapport à avant l\'atelier.</p>'
+    + '<div class="option-grid">' + DECLIC.map(n =>
+      '<div class="option-card' + (answers.declic === n.id ? ' selected' : '') + '" onclick="answers.declic=\'' + n.id + '\';step2()">'
       + '<div class="card-label">' + n.label + '</div><div class="card-desc">' + n.desc + '</div></div>'
-    ).join('') + '</div>' + nav(!!answers.niveau) + '</div>';
+    ).join('') + '</div>' + nav(!!answers.declic) + '</div>';
 }
 function step3() {
   const c = document.getElementById('stepContainer');
-  let items = '';
-  for (let i = 1; i <= 5; i++) items += '<div class="scale-item' + (answers.confiance === i ? ' selected' : '') + '" onclick="answers.confiance=' + i + ';step3()">' + i + '</div>';
   c.innerHTML = '<div class="step"><div class="step-label">Étape 3/' + TOTAL_STEPS + '</div>'
-    + '<h2>Votre confiance pour utiliser l\'IA dans votre travail ?</h2>'
-    + '<p class="hint">De 1 (pas du tout) à 5 (totalement).</p>'
-    + '<div class="scale-row">' + items + '</div>'
-    + '<div class="scale-legend"><span>Pas du tout</span><span>Totalement</span></div>'
-    + nav(answers.confiance !== null) + '</div>';
+    + '<h2>Vous repartez avec...</h2>'
+    + '<div class="option-grid">' + ENVIE.map(n =>
+      '<div class="option-card' + (answers.envie === n.id ? ' selected' : '') + '" onclick="answers.envie=\'' + n.id + '\';step3()">'
+      + '<div class="card-label">' + n.label + '</div><div class="card-desc">' + n.desc + '</div></div>'
+    ).join('') + '</div>' + nav(!!answers.envie) + '</div>';
 }
 function step4() {
   const c = document.getElementById('stepContainer');
   c.innerHTML = '<div class="step"><div class="step-label">Étape 4/' + TOTAL_STEPS + '</div>'
-    + '<h2>À quelle fréquence pensez-vous utiliser l\'IA maintenant ?</h2>'
-    + '<div class="option-grid">' + FREQUENCES.map(f =>
-      '<div class="option-card' + (answers.intention === f.id ? ' selected' : '') + '" onclick="answers.intention=\'' + f.id + '\';step4()">'
-      + '<div class="card-label">' + f.label + '</div></div>'
-    ).join('') + '</div>' + nav(!!answers.intention) + '</div>';
+    + '<h2>À quel point vous sentez-vous prêt à utiliser l\'IA dans votre travail ?</h2>'
+    + '<p class="hint">De 1 (pas du tout prêt) à 5 (tout à fait prêt).</p>'
+    + '<div class="scale-row">' + (function(){ let s=''; for(let i=1;i<=5;i++){ s+='<div class="scale-item'+(answers.disposition===i?' selected':'')+'" onclick="answers.disposition='+i+';step4()">'+i+'</div>'; } return s; })() + '</div>'
+    + '<div class="scale-legend"><span>Pas prêt</span><span>Tout à fait prêt</span></div>'
+    + nav(answers.disposition !== null) + '</div>';
 }
 
 function step5() {
@@ -256,13 +251,14 @@ async function submitForm() {
   const btn = document.getElementById('submitBtn');
   btn.disabled = true; btn.textContent = 'Envoi...';
   try {
-    // coanimation : reutilise pour stocker l'intention d'usage (S3), pas d'Az en atelier
+    // Mapping atelier 2h (colonnes reutilisees, pas d'Az) :
+    // objectifs=declic(clarte), coanimation=envie, confiance=disposition(1-5)
     const res = await supabaseInsert('satisfaction', {
       session_id: SESSION_ID,
       prenom: answers.prenom,
-      niveau: answers.niveau,
-      confiance: answers.confiance,
-      coanimation: answers.intention,
+      objectifs: answers.declic,
+      coanimation: answers.envie,
+      confiance: answers.disposition,
       note_globale: answers.note_globale,
       nps: answers.nps,
       moment_marquant: answers.moment,
