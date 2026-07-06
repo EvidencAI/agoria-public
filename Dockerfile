@@ -10,6 +10,7 @@ COPY preformation.html /usr/share/nginx/html/
 COPY preformation-atelier.html /usr/share/nginx/html/
 COPY quiz-email.html /usr/share/nginx/html/
 COPY questionnaire.html /usr/share/nginx/html/
+COPY questionnaire-atelier.html /usr/share/nginx/html/
 COPY followup.html /usr/share/nginx/html/
 COPY quizzes_email.json /usr/share/nginx/html/
 COPY assets /usr/share/nginx/html/assets
