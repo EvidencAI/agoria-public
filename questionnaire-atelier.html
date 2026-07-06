@@ -6,14 +6,7 @@
 <title>Après l'atelier — EvidencAI</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bleu-nuit: #1a1a2e;
-    --corail: #E07A5F;
-    --corail-hover: #c96a52;
-    --surface: #ffffff;
-    --texte-clair: #f8fafc;
-    --texte-secondaire: #94a3b8;
-  }
+  :root { --bleu-nuit: #1a1a2e; --corail: #E07A5F; --corail-hover: #c96a52; --surface: #ffffff; --texte-clair: #f8fafc; --texte-secondaire: #94a3b8; }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family: 'DM Sans', system-ui, -apple-system, sans-serif; background: var(--bleu-nuit); color: var(--texte-clair); min-height: 100vh; }
   header { background: var(--bleu-nuit); padding: 20px 32px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.08); }
@@ -26,7 +19,7 @@
   .welcome h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.8rem; font-weight: 700; color: var(--texte-clair); margin-bottom: 8px; }
   .welcome .sub { color: var(--texte-secondaire); font-size: 1rem; line-height: 1.5; max-width: 560px; margin: 0 auto; }
   .progress-bar { display: flex; gap: 6px; justify-content: center; margin-top: 14px; }
-  .progress-dot { width: 30px; height: 5px; border-radius: 3px; background: rgba(255,255,255,0.1); transition: background 0.3s; }
+  .progress-dot { width: 34px; height: 5px; border-radius: 3px; background: rgba(255,255,255,0.1); transition: background 0.3s; }
   .progress-dot.active { background: var(--corail); }
   .step { background: var(--surface); border-radius: 20px; padding: 28px 32px; margin-bottom: 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.3); color: #2d2d2d; }
   .step-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--corail); font-weight: 600; margin-bottom: 10px; }
@@ -49,9 +42,8 @@
   .chip { padding: 9px 18px; border: 2px solid #e2e8f0; border-radius: 24px; cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: all 0.2s; user-select: none; color: #334155; }
   .chip:hover { border-color: var(--corail); color: var(--corail); }
   .chip.selected { border-color: var(--corail); background: var(--corail); color: #fff; }
-  textarea, select { width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 14px; font-size: 0.95rem; font-family: 'DM Sans', sans-serif; background: #fff; color: #1e293b; line-height: 1.5; }
-  textarea { resize: vertical; min-height: 80px; }
-  textarea:focus, select:focus { outline: none; border-color: var(--corail); }
+  textarea { width: 100%; padding: 14px 16px; border: 2px solid #e2e8f0; border-radius: 14px; font-size: 0.95rem; font-family: 'DM Sans', sans-serif; background: #fff; color: #1e293b; line-height: 1.5; resize: vertical; min-height: 80px; }
+  textarea:focus { outline: none; border-color: var(--corail); }
   .nav-btns { display: flex; gap: 14px; justify-content: flex-end; margin-top: 20px; }
   .btn { padding: 13px 30px; border: none; border-radius: 14px; font-size: 1rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; }
   .btn-next { background: var(--corail); color: #fff; }
@@ -77,9 +69,10 @@
 <div id="app"></div>
 <script>
 const APP = document.getElementById('app');
-const SESSION_ID = new URLSearchParams(window.location.search).get('session_id');
+const TOKEN = new URLSearchParams(window.location.search).get('token');
+let SESSION_ID = '';
+let PRENOM = '';
 let currentStep = 0;
-let PRENOMS = [];
 
 const SUPABASE_URL = 'https://supabase.evidencai.com';
 const SUPABASE_KEY = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc3NjE1MDA2MCwiZXhwIjo0OTMxODIzNjYwLCJyb2xlIjoiYW5vbiJ9.LNYYUzroE5n61tMfo1hh06y05MPAhFJ4aWbaPGhwp6k';
@@ -99,9 +92,9 @@ async function supabaseInsert(table, row) {
   return resp.json();
 }
 
-const TOTAL_STEPS = 7;
+const TOTAL_STEPS = 6;
 const answers = {
-  prenom: '', declic: '', envie: '', disposition: null,
+  declic: '', envie: '', disposition: null,
   note_globale: null, moment: '', usage_concret: '', approfondir: [], nps: null, trois_mots: ''
 };
 
@@ -125,28 +118,37 @@ function headerHTML() {
     + '<span class="brand-by">Atelier IA · Chamas Group</span>'
     + '</div></header>';
 }
-
-async function init() {
-  if (!SESSION_ID) { APP.innerHTML = headerHTML() + '<div class="container"><div class="error-screen"><h2>Lien incomplet</h2><p>Ce lien ne contient pas d\'identifiant de session.</p></div></div>'; return; }
-  APP.innerHTML = headerHTML() + '<div class="container"><div class="loader">Chargement...</div></div>';
-  try {
-    const parts = await supabaseGet('participants?session_id=eq.' + SESSION_ID + '&order=prenom.asc');
-    PRENOMS = (parts || []).map(p => p.prenom).filter(Boolean);
-    renderWizard();
-  } catch (e) {
-    APP.innerHTML = headerHTML() + '<div class="container"><div class="error-screen"><h2>Erreur</h2><p>Impossible de charger. Réessayez dans un instant.</p></div></div>';
-  }
+function showError(t, m) {
+  APP.innerHTML = headerHTML() + '<div class="container"><div class="error-screen"><h2>' + t + '</h2><p>' + m + '</p></div></div>';
 }
-
 function showSuccess(t, m) {
   APP.innerHTML = headerHTML() + '<div class="container"><div class="success-screen"><div class="check-icon">' + ICONS.check + '</div><h2>' + t + '</h2><p>' + m + '</p></div></div>';
 }
 
+async function init() {
+  if (!TOKEN) { showError('Lien incomplet', 'Ce lien ne contient pas votre identifiant. Utilisez le lien reçu par mail.'); return; }
+  APP.innerHTML = headerHTML() + '<div class="container"><div class="loader">Chargement...</div></div>';
+  try {
+    const recs = await supabaseGet('preformation?token=eq.' + TOKEN + '&limit=1');
+    if (!recs || recs.length === 0) { showError('Lien invalide', 'Ce lien est invalide ou a expiré.'); return; }
+    const rec = recs[0];
+    SESSION_ID = rec.session_id;
+    PRENOM = 'Participant';
+    if (rec.participant_id) {
+      const parts = await supabaseGet('participants?id=eq.' + rec.participant_id + '&limit=1');
+      if (parts && parts.length > 0) PRENOM = parts[0].prenom || 'Participant';
+    }
+    renderWizard();
+  } catch (e) {
+    showError('Erreur', 'Impossible de charger. Réessayez dans un instant.');
+  }
+}
+
 function renderWizard() {
-  const steps = [step1, step2, step3, step4, step5, step6, step7];
+  const steps = [step1, step2, step3, step4, step5, step6];
   APP.innerHTML = headerHTML()
     + '<div class="container">'
-    + '<div class="welcome"><h1>Merci d\'avoir participé !</h1>'
+    + '<div class="welcome"><h1>Merci ' + PRENOM + ' !</h1>'
     + '<p class="sub">Deux minutes pour nous dire ce qui a marché et ce que vous aimeriez creuser. Vos réponses guideront la suite.</p>'
     + '<div class="progress-bar">'
     + steps.map((_, i) => '<div class="progress-dot' + (i <= currentStep ? ' active' : '') + '"></div>').join('')
@@ -163,53 +165,45 @@ function nav(canNext) {
 }
 function nextStep() { currentStep++; renderWizard(); }
 function prevStep() { currentStep--; renderWizard(); }
+function lbl() { return 'Étape ' + (currentStep + 1) + '/' + TOTAL_STEPS; }
 
 function step1() {
   const c = document.getElementById('stepContainer');
-  let opts = '<option value="">Choisissez votre prénom...</option>';
-  PRENOMS.forEach(p => { opts += '<option value="' + p + '"' + (answers.prenom === p ? ' selected' : '') + '>' + p + '</option>'; });
-  c.innerHTML = '<div class="step"><div class="step-label">Étape 1/' + TOTAL_STEPS + '</div>'
-    + '<h2>Qui êtes-vous ?</h2>'
-    + '<p class="hint">Pour relier vos réponses à celles d\'avant l\'atelier (données anonymisées ensuite).</p>'
-    + '<select id="prenomSel" onchange="answers.prenom=this.value;step1()">' + opts + '</select>'
-    + nav(!!answers.prenom) + '</div>';
-}
-function step2() {
-  const c = document.getElementById('stepContainer');
-  c.innerHTML = '<div class="step"><div class="step-label">Étape 2/' + TOTAL_STEPS + '</div>'
+  c.innerHTML = '<div class="step"><div class="step-label">' + lbl() + '</div>'
     + '<h2>En sortant, l\'IA vous paraît...</h2>'
     + '<p class="hint">Par rapport à avant l\'atelier.</p>'
     + '<div class="option-grid">' + DECLIC.map(n =>
-      '<div class="option-card' + (answers.declic === n.id ? ' selected' : '') + '" onclick="answers.declic=\'' + n.id + '\';step2()">'
+      '<div class="option-card' + (answers.declic === n.id ? ' selected' : '') + '" onclick="answers.declic=\'' + n.id + '\';step1()">'
       + '<div class="card-label">' + n.label + '</div><div class="card-desc">' + n.desc + '</div></div>'
     ).join('') + '</div>' + nav(!!answers.declic) + '</div>';
 }
-function step3() {
+function step2() {
   const c = document.getElementById('stepContainer');
-  c.innerHTML = '<div class="step"><div class="step-label">Étape 3/' + TOTAL_STEPS + '</div>'
+  c.innerHTML = '<div class="step"><div class="step-label">' + lbl() + '</div>'
     + '<h2>Vous repartez avec...</h2>'
     + '<div class="option-grid">' + ENVIE.map(n =>
-      '<div class="option-card' + (answers.envie === n.id ? ' selected' : '') + '" onclick="answers.envie=\'' + n.id + '\';step3()">'
+      '<div class="option-card' + (answers.envie === n.id ? ' selected' : '') + '" onclick="answers.envie=\'' + n.id + '\';step2()">'
       + '<div class="card-label">' + n.label + '</div><div class="card-desc">' + n.desc + '</div></div>'
     ).join('') + '</div>' + nav(!!answers.envie) + '</div>';
 }
-function step4() {
+function step3() {
   const c = document.getElementById('stepContainer');
-  c.innerHTML = '<div class="step"><div class="step-label">Étape 4/' + TOTAL_STEPS + '</div>'
+  let items = '';
+  for (let i = 1; i <= 5; i++) items += '<div class="scale-item' + (answers.disposition === i ? ' selected' : '') + '" onclick="answers.disposition=' + i + ';step3()">' + i + '</div>';
+  c.innerHTML = '<div class="step"><div class="step-label">' + lbl() + '</div>'
     + '<h2>À quel point vous sentez-vous prêt à utiliser l\'IA dans votre travail ?</h2>'
     + '<p class="hint">De 1 (pas du tout prêt) à 5 (tout à fait prêt).</p>'
-    + '<div class="scale-row">' + (function(){ let s=''; for(let i=1;i<=5;i++){ s+='<div class="scale-item'+(answers.disposition===i?' selected':'')+'" onclick="answers.disposition='+i+';step4()">'+i+'</div>'; } return s; })() + '</div>'
+    + '<div class="scale-row">' + items + '</div>'
     + '<div class="scale-legend"><span>Pas prêt</span><span>Tout à fait prêt</span></div>'
     + nav(answers.disposition !== null) + '</div>';
 }
-
-function step5() {
+function step4() {
   const c = document.getElementById('stepContainer');
   let g = '';
-  for (let i = 1; i <= 5; i++) g += '<div class="scale-item' + (answers.note_globale === i ? ' selected' : '') + '" onclick="answers.note_globale=' + i + ';step5()">' + i + '</div>';
+  for (let i = 1; i <= 5; i++) g += '<div class="scale-item' + (answers.note_globale === i ? ' selected' : '') + '" onclick="answers.note_globale=' + i + ';step4()">' + i + '</div>';
   let n = '';
-  for (let i = 0; i <= 10; i++) n += '<div class="scale-item' + (answers.nps === i ? ' selected' : '') + '" onclick="answers.nps=' + i + ';step5()">' + i + '</div>';
-  c.innerHTML = '<div class="step"><div class="step-label">Étape 5/' + TOTAL_STEPS + '</div>'
+  for (let i = 0; i <= 10; i++) n += '<div class="scale-item' + (answers.nps === i ? ' selected' : '') + '" onclick="answers.nps=' + i + ';step4()">' + i + '</div>';
+  c.innerHTML = '<div class="step"><div class="step-label">' + lbl() + '</div>'
     + '<h2>Votre note globale de l\'atelier</h2>'
     + '<p class="hint">De 1 à 5.</p>'
     + '<div class="scale-row">' + g + '</div>'
@@ -218,9 +212,10 @@ function step5() {
     + '<div class="scale-row">' + n + '</div>'
     + nav(answers.note_globale !== null && answers.nps !== null) + '</div>';
 }
-function step6() {
+
+function step5() {
   const c = document.getElementById('stepContainer');
-  c.innerHTML = '<div class="step"><div class="step-label">Étape 6/' + TOTAL_STEPS + '</div>'
+  c.innerHTML = '<div class="step"><div class="step-label">' + lbl() + '</div>'
     + '<h2>Ce qui vous a parlé</h2>'
     + '<p class="hint">Le moment ou l\'idée qui vous a le plus marqué pendant l\'atelier.</p>'
     + '<textarea id="momentInput" placeholder="Ex : le moment où on a vu que l\'IA se trompe, la démo sur..." oninput="answers.moment=this.value">' + (answers.moment || '') + '</textarea>'
@@ -229,9 +224,9 @@ function step6() {
     + '<textarea id="usageInput" placeholder="Ex : lui faire relire mes mails, résumer un compte-rendu..." oninput="answers.usage_concret=this.value">' + (answers.usage_concret || '') + '</textarea>'
     + nav(true) + '</div>';
 }
-function step7() {
+function step6() {
   const c = document.getElementById('stepContainer');
-  c.innerHTML = '<div class="step"><div class="step-label">Étape 7/' + TOTAL_STEPS + '</div>'
+  c.innerHTML = '<div class="step"><div class="step-label">' + lbl() + '</div>'
     + '<h2>Ce que vous aimeriez creuser</h2>'
     + '<p class="hint">Plusieurs choix possibles. Ça nous aide à préparer les prochains ateliers.</p>'
     + '<div class="chip-grid">' + APPROFONDIR.map(a =>
@@ -244,7 +239,7 @@ function step7() {
 function toggleApp(val) {
   const i = answers.approfondir.indexOf(val);
   if (i >= 0) answers.approfondir.splice(i, 1); else answers.approfondir.push(val);
-  step7();
+  step6();
 }
 
 async function submitForm() {
@@ -255,7 +250,7 @@ async function submitForm() {
     // objectifs=declic(clarte), coanimation=envie, confiance=disposition(1-5)
     const res = await supabaseInsert('satisfaction', {
       session_id: SESSION_ID,
-      prenom: answers.prenom,
+      prenom: PRENOM,
       objectifs: answers.declic,
       coanimation: answers.envie,
       confiance: answers.disposition,
@@ -267,7 +262,7 @@ async function submitForm() {
       trois_mots: answers.trois_mots
     });
     if (res && res.length > 0) {
-      showSuccess('Merci ' + answers.prenom + ' !', 'Vos retours sont enregistrés. Ils vont directement nourrir la suite pour vos équipes. À bientôt !');
+      showSuccess('Merci ' + PRENOM + ' !', 'Vos retours sont enregistrés. Ils vont directement nourrir la suite pour vos équipes. À bientôt !');
     } else {
       btn.disabled = false; btn.textContent = 'Envoyer'; alert('Une erreur est survenue. Réessayez.');
     }
