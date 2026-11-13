@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Questionnaire formation IA : Benoit Gauthier</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --fond:#1a1a2e;--fond-light:#222240;--corail:#E07A5F;--corail-light:#e8967f;
+  --blanc:#f0f0f0;--gris:#a0a0b8;--bleu-subtil:#3a3a5c;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--fond);color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:1rem;line-height:1.7}
+.wrap{max-width:760px;margin:0 auto;padding:56px 24px 96px;position:relative}
+.wrap::before{content:'';position:absolute;top:-80px;right:-120px;width:520px;height:520px;background:radial-gradient(circle,rgba(224,122,95,0.08) 0%,transparent 70%);pointer-events:none;z-index:0}
+.wrap>*{position:relative;z-index:1}
+.logo{font-family:'Playfair Display',serif;font-weight:700;font-size:1.25rem;letter-spacing:.3px;margin-bottom:36px}
+.logo span{color:var(--corail)}
+.badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--corail);border:1px solid rgba(224,122,95,0.3);padding:6px 14px;border-radius:20px;margin-bottom:20px}
+h1{font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(2rem,4.5vw,2.8rem);line-height:1.2;margin-bottom:16px}
+h1 em{font-style:normal;color:var(--corail)}
+.lead{color:var(--gris);font-size:1.05rem;max-width:640px}
+.meta-row{display:flex;flex-wrap:wrap;gap:28px;margin:28px 0 8px}
+.meta-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gris)}
+.meta-value{font-weight:600}
+.note{padding:16px 20px;background:rgba(224,122,95,0.04);border-left:3px solid var(--corail);border-radius:0 8px 8px 0;font-size:.92rem;color:var(--gris);margin-top:28px}
+.note strong{color:var(--blanc)}
+.progress{position:sticky;top:0;background:rgba(26,26,46,.94);backdrop-filter:blur(6px);padding:14px 0 12px;margin:36px 0 8px;z-index:5}
+.progress-bar{height:3px;background:var(--bleu-subtil);border-radius:2px;overflow:hidden}
+.progress-bar div{height:100%;width:0;background:var(--corail);transition:width .3s}
+.progress-txt{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gris);letter-spacing:1px;margin-top:6px}
+section.bloc{margin-top:40px}
+.bonjour{font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:6px;min-height:0}
+.apercu{display:none;margin-top:20px}
+.apercu.on{display:block}
+.bloc-label{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--corail);margin-bottom:6px}
+h2{font-family:'Playfair Display',serif;font-weight:600;font-size:1.6rem;margin-bottom:18px}
+.q{background:var(--fond-light);border:1px solid var(--bleu-subtil);border-radius:16px;padding:24px 24px 20px;margin-bottom:16px;transition:border-color .3s}
+.q:focus-within{border-color:rgba(224,122,95,0.5)}
+.q-title{font-weight:600;font-size:1.02rem;margin-bottom:4px}
+.q-num{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--corail);margin-right:8px}
+.q-help{color:var(--gris);font-size:.88rem;margin-bottom:14px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt label{display:inline-block;padding:9px 16px;border:1px solid var(--bleu-subtil);border-radius:8px;font-size:.93rem;color:var(--blanc);cursor:pointer;transition:border-color .2s,background .2s;user-select:none}
+.opt label:hover{border-color:rgba(224,122,95,0.4)}
+.opt input:checked+label{border-color:var(--corail);background:rgba(224,122,95,0.12)}
+.opt input:focus-visible+label{outline:2px solid var(--corail);outline-offset:2px}
+.opts.col{flex-direction:column}
+.opts.col .opt label{display:block}
+.scale{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.scale .opt label{display:block;text-align:center;padding:10px 6px}
+.scale .opt label small{display:block;color:var(--gris);font-size:.78rem;line-height:1.3;margin-top:2px}
+input[type=text],textarea{width:100%;background:var(--fond);border:1px solid var(--bleu-subtil);border-radius:8px;color:var(--blanc);font-family:'DM Sans',sans-serif;font-size:.95rem;padding:11px 14px;transition:border-color .2s}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--corail)}
+textarea{min-height:96px;resize:vertical;line-height:1.6}
+.ex{margin-top:10px;font-size:.86rem;color:var(--gris)}
+.ex b{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--corail);font-weight:500;margin-right:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.autre{margin-top:10px;display:none}
+.autre.on{display:block}
+.max{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gris);margin-top:8px}
+.max.warn{color:var(--corail)}
+.actions{margin-top:40px;text-align:center}
+.cta{background:var(--corail);color:#fff;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;padding:16px 40px;border:none;border-radius:8px;cursor:pointer;transition:background .2s,transform .15s}
+.cta:hover{background:var(--corail-light);transform:translateY(-1px)}
+.cta.ghost{background:transparent;border:1px solid var(--bleu-subtil);color:var(--blanc);padding:12px 24px;font-size:.95rem}
+.cta.ghost:hover{border-color:var(--corail);background:transparent}
+.err{color:var(--corail);font-size:.9rem;margin-top:12px;min-height:1.4em}
+#fin{display:none;margin-top:40px}
+#fin.on{display:block}
+#recap{white-space:pre-wrap;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.6;background:var(--fond);border:1px solid var(--bleu-subtil);border-radius:8px;padding:18px;max-height:340px;overflow:auto;color:var(--gris);margin:16px 0}
+.fin-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.addr{font-family:'JetBrains Mono',monospace;color:var(--blanc)}
+footer{margin-top:64px;color:var(--gris);font-size:.82rem;text-align:center}
+footer .logo{font-size:1rem;margin-bottom:4px}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}.scale{grid-template-columns:1fr 1fr}.q{padding:20px 18px 16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo">Evidenc<span>AI</span></div>
+  <div class="badge" id="badge">Formation IA · Benoit Gauthier</div>
+  <div id="bonjour" class="bonjour"></div>
+  <h1>Votre formation IA,<br><em>construite sur votre métier</em></h1>
+  <p class="lead">Pour préparer des exercices tirés de votre quotidien, et pas des exemples génériques, j'ai besoin de savoir comment vous travaillez aujourd'hui.</p>
+  <div class="meta-row">
+    <div><div class="meta-label">Durée</div><div class="meta-value">5 minutes</div></div>
+    <div><div class="meta-label">Questions</div><div class="meta-value">10, presque toutes à cocher</div></div>
+    <div><div class="meta-label">Formation</div><div class="meta-value">24/11 et 04/12/2026</div></div>
+  </div>
+  <div class="note apercu" id="apercu"><strong>Mode aperçu</strong> : ce lien sert à relire le questionnaire, les réponses ne sont pas enregistrées.</div>
+  <div class="note">Il n'y a pas de bonne ou de mauvaise réponse. <strong>Vos réponses servent uniquement à préparer la formation</strong> : elles ne sont pas transmises à votre direction.</div>
+
+  <div class="progress"><div class="progress-bar"><div id="bar"></div></div><div class="progress-txt" id="ptxt">0 / 10 réponses</div></div>
+
+  <form id="f" novalidate>
+
+  <section class="bloc">
+    <div class="bloc-label">01 · Claude aujourd'hui</div>
+    <h2>Votre pratique actuelle</h2>
+
+    <div class="q" data-q="1">
+      <div class="q-title"><span class="q-num">1</span>À quelle fréquence utilisez-vous Claude pour le travail ?</div>
+      <div class="opts" data-name="frequence" data-type="radio">
+        <span>Tous les jours</span><span>Plusieurs fois par semaine</span><span>Quelques fois par mois</span><span>Rarement ou jamais</span>
+      </div>
+    </div>
+
+    <div class="q" data-q="2">
+      <div class="q-title"><span class="q-num">2</span>Comment vous situez-vous ?</div>
+      <div class="scale" data-name="niveau" data-type="radio" data-scale="1">
+        <span>Débutant<small>Je pose des questions simples</small></span>
+        <span>À l'aise<small>Je l'utilise pour rédiger, résumer</small></span>
+        <span>Avancé<small>Je lui donne mes fichiers, je l'ai paramétré</small></span>
+        <span>Expert<small>J'automatise, je crée des outils</small></span>
+      </div>
+    </div>
+
+    <div class="q" data-q="3">
+      <div class="q-title"><span class="q-num">3</span>Ces fonctions de Claude, vous les utilisez ?</div>
+      <div class="q-help">Cochez tout ce que vous utilisez déjà. Si un mot ne vous dit rien, c'est normal : on le verra ensemble.</div>
+      <div class="opts" data-name="fonctions" data-type="checkbox">
+        <span>Lui envoyer un fichier (Excel, PDF, Word)</span><span>Instructions personnelles</span><span>Mémoire</span><span>Projets</span><span>Skills</span><span>Connecteurs (Outlook, Drive…)</span><span>Tâches planifiées</span><span>Créer des documents ou tableaux</span><span>Aucune de ces fonctions</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloc">
+    <div class="bloc-label">02 · Votre travail</div>
+    <h2>Là où part votre temps</h2>
+
+    <div class="q" data-q="4">
+      <div class="q-title"><span class="q-num">4</span>Sur quelles tâches aimeriez-vous gagner du temps ?</div>
+      <div class="q-help">Plusieurs réponses possibles.</div>
+      <div class="opts" data-name="taches" data-type="checkbox" data-autre="1">
+        <span>Rédiger des courriers et des mails</span><span>Rédiger des actus, des notes internes</span><span>Analyser un fichier Excel</span><span>Écrire des formules ou des macros Excel</span><span>Faire des comparatifs, des tableaux</span><span>Recherches juridiques, fiscales, sociales</span><span>Faire une veille régulière</span><span>Résumer des documents longs</span><span>Préparer des comptes rendus</span><span>Suivre un planning, des relances</span><span>Autre</span>
+      </div>
+      <input type="text" class="autre" name="taches_autre" placeholder="Précisez">
+    </div>
+
+    <div class="q" data-q="5">
+      <div class="q-title"><span class="q-num">5</span>Combien de temps par semaine passez-vous sur des tâches répétitives ?</div>
+      <div class="q-help">Ce que vous refaites presque à l'identique d'une semaine à l'autre.</div>
+      <div class="opts" data-name="temps" data-type="radio">
+        <span>Moins d'1 h</span><span>1 à 3 h</span><span>3 à 5 h</span><span>Plus de 5 h</span><span>Je ne sais pas</span>
+      </div>
+    </div>
+
+    <div class="q" data-q="6">
+      <div class="q-title"><span class="q-num">6</span>Décrivez une tâche qui vous prend du temps</div>
+      <div class="q-help">En une ou deux phrases : ce que vous faites, à quelle fréquence, combien de temps.</div>
+      <textarea name="tache_detail" placeholder="Votre tâche…"></textarea>
+      <div class="ex"><b>Exemple</b>« Chaque lundi, je reprends trois tableaux Excel pour faire le point d'activité de la semaine : environ 1 h 30. »</div>
+      <div class="ex"><b>Exemple</b>« Je rédige une dizaine de courriers par mois sur le même modèle, en changeant les noms et les dates. »</div>
+    </div>
+
+    <div class="q" data-q="7">
+      <div class="q-title"><span class="q-num">7</span>Quels outils utilisez-vous chaque jour ?</div>
+      <div class="q-help">Plusieurs réponses possibles.</div>
+      <div class="opts" data-name="outils" data-type="checkbox" data-autre="1">
+        <span>Excel</span><span>Word</span><span>Outlook</span><span>Teams</span><span>Pennylane</span><span>Logiciel de paie</span><span>Logiciel transport ou exploitation</span><span>Papier</span><span>Autre</span>
+      </div>
+      <input type="text" class="autre" name="outils_autre" placeholder="Précisez">
+    </div>
+
+    <div class="q" data-q="8">
+      <div class="q-title"><span class="q-num">8</span>Travaillez-vous sur des données sensibles ?</div>
+      <div class="q-help">Données de clients, de salariés, chiffres de l'entreprise.</div>
+      <div class="opts col" data-name="sensible" data-type="radio">
+        <span>Oui, souvent</span><span>Parfois</span><span>Non</span><span>Oui, et je ne sais pas ce que je peux confier à Claude</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloc">
+    <div class="bloc-label">03 · Vos attentes</div>
+    <h2>Ce que vous voulez en retirer</h2>
+
+    <div class="q" data-q="9">
+      <div class="q-title"><span class="q-num">9</span>Vos 3 priorités pour la formation</div>
+      <div class="q-help">3 réponses au maximum.</div>
+      <div class="opts" data-name="priorites" data-type="checkbox" data-max="3">
+        <span>Mieux formuler mes demandes</span><span>Travailler mes fichiers Excel avec Claude</span><span>Gagner du temps sur la rédaction</span><span>Automatiser des tâches répétitives</span><span>Créer mes propres outils</span><span>Relier Claude à mes logiciels</span><span>Découvrir des fonctions que je ne connais pas</span><span>Savoir quelles données je peux confier</span>
+      </div>
+      <div class="max" id="maxP">0 / 3</div>
+    </div>
+
+    <div class="q" data-q="10">
+      <div class="q-title"><span class="q-num">10</span>À la fin des deux journées, j'aimerais savoir…</div>
+      <div class="q-help">Une phrase suffit. Facultatif mais précieux.</div>
+      <textarea name="attente" placeholder="J'aimerais savoir…"></textarea>
+      <div class="ex"><b>Exemple</b>« … faire analyser mon fichier de suivi mensuel et en sortir une synthèse en deux minutes. »</div>
+      <div class="ex"><b>Exemple</b>« … recevoir chaque semaine une veille sur les nouveautés de mon domaine sans avoir à la chercher. »</div>
+    </div>
+  </section>
+
+  <div class="actions">
+    <button type="submit" class="cta" id="envoyer">Envoyer mes réponses</button>
+    <div class="err" id="err"></div>
+    
+  </div>
+  </form>
+
+  <section id="fin">
+    <div class="bloc-label">Merci</div>
+    <h2 id="fin-titre">Vos réponses sont bien enregistrées</h2>
+    <p class="lead" id="fin-texte">Je m'en sers pour préparer des exercices tirés de votre travail. À très bientôt pour la formation.</p>
+    <div id="secours" style="display:none">
+      <p class="lead" style="margin-top:16px">L'enregistrement n'a pas abouti. Pour ne rien perdre, copiez vos réponses et envoyez-les à <span class="addr">stephane@commenge.net</span>.</p>
+      <div id="recap"></div>
+      <div class="fin-actions">
+        <button class="cta" id="copier" type="button">Copier mes réponses</button>
+        <a class="cta ghost" id="mail" href="#">Ouvrir un mail</a>
+      </div>
+      <div class="err" id="copie-msg"></div>
+    </div>
+    <div class="fin-actions" style="margin-top:20px"><button class="cta ghost" id="modifier" type="button">Modifier mes réponses</button></div>
+  </section>
+
+  <footer>
+    <div class="logo">Evidenc<span>AI</span></div>
+    Stéphane Commenge · Pour une IA qui vous améliore. Pas qui vous remplace.
+  </footer>
+</div>
+
+<script>
+(function(){
+  // Construit les options cliquables à partir des <span>
+  var uid=0;
+  document.querySelectorAll('[data-name]').forEach(function(box){
+    var name=box.dataset.name,type=box.dataset.type;
+    Array.prototype.slice.call(box.children).forEach(function(sp){
+      var id='o'+(uid++);
+      var wrap=document.createElement('div');wrap.className='opt';
+      var inp=document.createElement('input');inp.type=type;inp.name=name;inp.id=id;
+      var lab=document.createElement('label');lab.htmlFor=id;lab.innerHTML=sp.innerHTML;
+      inp.value=sp.childNodes[0].textContent.trim();
+      wrap.appendChild(inp);wrap.appendChild(lab);box.replaceChild(wrap,sp);
+    });
+  });
+
+  var form=document.getElementById('f');
+
+  function vals(name){
+    return Array.prototype.slice.call(form.querySelectorAll('input[name="'+name+'"]:checked')).map(function(i){return i.value});
+  }
+  function txt(name){var el=form.querySelector('[name="'+name+'"]');return el?el.value.trim():''}
+
+  // Champs « Autre »
+  document.querySelectorAll('[data-autre]').forEach(function(box){
+    var champ=box.parentNode.querySelector('.autre');
+    box.addEventListener('change',function(){
+      var on=vals(box.dataset.name).indexOf('Autre')>-1;
+      champ.classList.toggle('on',on);
+    });
+  });
+
+  // Maximum de 3 priorités
+  var boxMax=document.querySelector('[data-max]'),maxTxt=document.getElementById('maxP');
+  boxMax.addEventListener('change',function(e){
+    var max=+boxMax.dataset.max,n=vals('priorites').length;
+    if(n>max){e.target.checked=false;n=max;maxTxt.classList.add('warn');setTimeout(function(){maxTxt.classList.remove('warn')},1200)}
+    maxTxt.textContent=n+' / '+max;
+  });
+
+  // Progression
+  function repondu(q){
+    switch(q){
+      case 1:return vals('frequence').length;
+      case 2:return vals('niveau').length;
+      case 3:return vals('fonctions').length;
+      case 4:return vals('taches').length;
+      case 5:return vals('temps').length;
+      case 6:return txt('tache_detail');
+      case 7:return vals('outils').length;
+      case 8:return vals('sensible').length;
+      case 9:return vals('priorites').length;
+      case 10:return txt('attente');
+    }
+  }
+  function maj(){
+    var n=0;for(var i=1;i<=10;i++){if(repondu(i))n++}
+    document.getElementById('bar').style.width=(n/10*100)+'%';
+    document.getElementById('ptxt').textContent=n+' / 10 réponses';
+  }
+  form.addEventListener('input',maj);form.addEventListener('change',maj);
+
+  function avecAutre(name){
+    var v=vals(name),a=txt(name+'_autre');
+    return v.map(function(x){return x==='Autre'&&a?'Autre : '+a:x}).join(', ');
+  }
+
+  var SUPABASE_URL='https://supabase.evidencai.com';
+  var SUPABASE_KEY='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc3NjE1MDA2MCwiZXhwIjo0OTMxODIzNjYwLCJyb2xlIjoiYW5vbiJ9.LNYYUzroE5n61tMfo1hh06y05MPAhFJ4aWbaPGhwp6k';
+  var TOKEN=new URLSearchParams(window.location.search).get('token');
+  var APERCU=!TOKEN||TOKEN==='apercu';
+  var H={'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY};
+  function sbGet(path){return fetch(SUPABASE_URL+'/rest/v1/'+path,{headers:Object.assign({'Accept-Profile':'agoria'},H)}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})}
+  function sbPatch(path,data){return fetch(SUPABASE_URL+'/rest/v1/'+path,{method:'PATCH',headers:Object.assign({'Content-Profile':'agoria','Content-Type':'application/json','Prefer':'return=representation'},H),body:JSON.stringify(data)}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})}
+
+  var envoyer=document.getElementById('envoyer'),err=document.getElementById('err');
+  if(APERCU){
+    document.getElementById('apercu').classList.add('on');
+    envoyer.textContent='Voir l\'écran de fin (aperçu)';
+  }else{
+    sbGet('preformation?token=eq.'+encodeURIComponent(TOKEN)+'&select=id,completed_at,reponses,participants(prenom)&limit=1').then(function(rows){
+      if(!rows.length){err.textContent='Ce lien n\'est pas reconnu. Vérifiez qu\'il est complet, ou écrivez à stephane@commenge.net.';envoyer.disabled=true;return}
+      var r=rows[0];
+      if(r.participants&&r.participants.prenom)document.getElementById('bonjour').textContent='Bonjour '+r.participants.prenom+',';
+      if(r.completed_at&&r.reponses&&r.reponses.brut)remplir(r.reponses.brut);
+    }).catch(function(){/* hors ligne : on laisse répondre, le secours prendra le relais */});
+  }
+
+  function collecter(){
+    return {frequence:vals('frequence'),niveau:vals('niveau'),fonctions:vals('fonctions'),taches:vals('taches'),taches_autre:txt('taches_autre'),temps:vals('temps'),tache_detail:txt('tache_detail'),outils:vals('outils'),outils_autre:txt('outils_autre'),sensible:vals('sensible'),priorites:vals('priorites'),attente:txt('attente')};
+  }
+  function remplir(b){
+    Object.keys(b).forEach(function(k){
+      var v=b[k];
+      if(Array.isArray(v)){form.querySelectorAll('input[name="'+k+'"]').forEach(function(i){i.checked=v.indexOf(i.value)>-1})}
+      else{var el=form.querySelector('[name="'+k+'"]');if(el)el.value=v||''}
+    });
+    document.querySelectorAll('[data-autre]').forEach(function(box){box.parentNode.querySelector('.autre').classList.toggle('on',vals(box.dataset.name).indexOf('Autre')>-1)});
+    document.getElementById('maxP').textContent=vals('priorites').length+' / 3';
+    maj();
+  }
+  function recap(){
+    var L=['QUESTIONNAIRE FORMATION IA : BENOIT GAUTHIER',''];
+    L.push('1. Fréquence d\'usage : '+(vals('frequence').join('')||'-'));
+    L.push('2. Niveau : '+(vals('niveau').join('')||'-'));
+    L.push('3. Fonctions utilisées : '+(vals('fonctions').join(', ')||'-'));
+    L.push('4. Tâches à alléger : '+(avecAutre('taches')||'-'));
+    L.push('5. Temps hebdo sur tâches répétitives : '+(vals('temps').join('')||'-'));
+    L.push('6. Tâche qui prend du temps : '+(txt('tache_detail')||'-'));
+    L.push('7. Outils quotidiens : '+(avecAutre('outils')||'-'));
+    L.push('8. Données sensibles : '+(vals('sensible').join('')||'-'));
+    L.push('9. Priorités : '+(vals('priorites').join(', ')||'-'));
+    L.push('10. À la fin, j\'aimerais savoir : '+(txt('attente')||'-'));
+    return L.join('\n');
+  }
+  function afficherFin(ok){
+    form.style.display='none';document.querySelector('.progress').style.display='none';
+    var fin=document.getElementById('fin');fin.classList.add('on');
+    if(APERCU){document.getElementById('fin-titre').textContent='Écran de fin (aperçu)';document.getElementById('fin-texte').textContent='Ici, le participant voit que ses réponses sont enregistrées. En aperçu, rien n\'est enregistré.'}
+    if(!ok){
+      document.getElementById('fin-titre').textContent='Presque fini';document.getElementById('fin-texte').textContent='';
+      var t=recap();document.getElementById('recap').textContent=t;
+      document.getElementById('mail').href='mailto:stephane@commenge.net?subject='+encodeURIComponent('Questionnaire formation IA')+'&body='+encodeURIComponent(t);
+      document.getElementById('secours').style.display='';
+    }
+    fin.scrollIntoView({behavior:'smooth'});
+  }
+
+  form.addEventListener('submit',function(e){
+    e.preventDefault();err.textContent='';
+    if(APERCU){afficherFin(true);return}
+    var b=collecter();
+    envoyer.disabled=true;envoyer.textContent='Envoi…';
+    sbPatch('preformation?token=eq.'+encodeURIComponent(TOKEN),{
+      reponses:{questionnaire:'lvbg-2026-11',brut:b,texte:recap()},
+      niveau_declare:b.niveau[0]||null,frequence_usage:b.frequence[0]||null,outils_utilises:b.outils,
+      cas_usage_souhaites:b.tache_detail||null,attentes:b.attente||null,completed_at:new Date().toISOString()
+    }).then(function(rows){afficherFin(rows&&rows.length>0)}).catch(function(){afficherFin(false)}).then(function(){envoyer.disabled=false;envoyer.textContent='Envoyer mes réponses'});
+  });
+
+  document.getElementById('copier').addEventListener('click',function(){
+    var msg=document.getElementById('copie-msg'),t=recap();
+    try{navigator.clipboard.writeText(t).then(function(){msg.textContent='Réponses copiées.'},function(){msg.textContent='Sélectionnez le texte ci-dessus et copiez-le.'})}catch(e){msg.textContent='Sélectionnez le texte ci-dessus et copiez-le.'}
+  });
+  document.getElementById('modifier').addEventListener('click',function(){
+    form.style.display='';document.querySelector('.progress').style.display='';
+    document.getElementById('fin').classList.remove('on');document.getElementById('secours').style.display='none';
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+})();
+</script>
+</body>
+</html>
